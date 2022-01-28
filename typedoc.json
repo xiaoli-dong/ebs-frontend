@@ -1,0 +1,6 @@
+{
+  "readme": "none",
+  "name": "Micro Genomics - Frontend Application",
+  "entryPoints": ["./components", "./middleware", "./modules", "./pages"],
+  "out": "docs"
+}

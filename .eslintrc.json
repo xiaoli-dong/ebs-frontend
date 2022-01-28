@@ -1,0 +1,66 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+    // "plugin:import/recommended",
+    // "plugin:import/warnings",
+    // "plugin:import/errors",
+    // "plugin:import/typescript"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    // "ecmaFeatures": {
+    //   "jsx": true
+    // },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": [
+    // "import",
+    "react",
+    "@typescript-eslint/eslint-plugin",
+    "eslint-plugin-tsdoc"
+  ],
+  "globals": {
+    "React": "writable"
+  },
+  "rules": {
+    "react/prop-types": "off", // temporary; recommend to use typescript
+    "tsdoc/syntax": "warn"
+    // "import/order": [
+    //   "error",
+    //   {
+    //     "groups": ["builtin", "external", "internal"],
+    //     "pathGroups": [
+    //       {
+    //         "pattern": "react",
+    //         "group": "external",
+    //         "position": "before"
+    //       }
+    //     ],
+    //     "pathGroupsExcludedImportTypes": ["react"],
+    //     "newlines-between": "always",
+    //     "alphabetize": {
+    //       "order": "asc",
+    //       "caseInsensitive": true
+    //     }
+    //   }
+    // ]
+  }
+  // "settings": {
+  //   "import/resolver": {
+  //     "node": {
+  //       "extensions": [".js", ".jsx", ".ts", ".tsx"],
+  //       "moduleDirectory": ["node_modules", "src/"]
+  //     }
+  //   }
+  // }
+}

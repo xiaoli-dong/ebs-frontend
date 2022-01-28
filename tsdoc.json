@@ -1,0 +1,26 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
+  "ignoreMessageIds": ["tsdoc-at-sign-in-word", "tsdoc-undefined-tag"],
+  "tagDefinitions": [
+    {
+      "tagName": "@author",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@email",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@create",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@modify",
+      "syntaxKind": "block"
+    },
+    {
+      "tagName": "@desc",
+      "syntaxKind": "block"
+    }
+  ]
+}

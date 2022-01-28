@@ -1,0 +1,16 @@
+{
+    "source": {
+        "include": ["pages", "components", "middleware", "modules"],
+        "includePattern": ".+\\.js(doc|x)?$",
+        "excludePattern": "(node_modules/|docs|next/|vscode/|public/|styles/)"
+    },
+    "plugins": ["plugins/markdown"],
+    "templates": {
+        "cleverLinks": true,
+        "monospaceLinks": true 
+    },
+    "opts": {
+        "recurse": true,
+        "destination": "./docs/"
+    }
+}
