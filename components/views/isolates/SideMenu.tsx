@@ -89,6 +89,32 @@ function SideMenu({
   const [isFilterOn, setFilterOn] = useState<boolean>(false)
   const [subMenuIndex, setSubMenuIndex] = useState({})
  
+  const fetchData = useCallback(
+    async (reqURL: string) => {
+      console.log("reqURL=" + reqURL)
+      const config = {
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      };
+      setLoading(true);
+      await axios
+        .get(reqURL, config)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.data)
+            setFilters(res.data);
+
+          }
+        })
+        .catch((err) => console.log(err))
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+    
+    [query]
+  );
   useEffect(() => {
     console.log("useEffect 0")
     // setQueryset([]);
@@ -120,7 +146,7 @@ function SideMenu({
        fetchData(
         URLHandler(URL.uri, query, "", "", undefined, undefined, null).url
       ); 
-  }, [queryset, subMenuIndex, query]);
+  }, [queryset, query]);
   
 
   const handleClick = (e, data) => {
@@ -135,6 +161,7 @@ function SideMenu({
     (e, data) => {
       const [mykey, myvalue] = data.value.split("--");
       const [key, value] = [mykey, encodeURIComponent(myvalue)]
+      console.log("handleChange key=" + key + " value=" + value)
       setChecked(e.target.checked)
       setQueryset(
         queryset.length > 0
@@ -157,15 +184,30 @@ function SideMenu({
     },
     [queryset]
   );
-  const handleFilterListChange = (e, data) => {
-    console.log("handle filter list click")
+  const handleFilterListChange =useCallback ((e, data) => {
+    console.log("handleFilterListChange data=")
     console.log(data)
-    console.log("check whether I am checked or not=")
+    
     console.log("label=" + data.label + " checked=" + data.checked)
     setSubMenuIndex({ ...subMenuIndex, [data.label]: data.checked });
-
     //TODO should handle uncheck effect here
-  };
+   //disable sublist filter of the section
+   console.log(queryset)
+    if(!data.checked){
+      /* setQuery(
+        queryset
+          .filter((obj) => obj.keywords.length > 0)
+          .map((obj) => obj.field !== data.label ? obj.field + "=" + obj.keywords.join(",") : "")
+          .join("&")
+      ); */
+
+      console.log("after uncheck")
+      console.log(queryset)
+      console.log("leaving handleFilterListChange")
+    }
+    
+  }, [queryset]
+  );
   const getFilterList = () => {
     return Object.entries(filters).map(([key, value], index) => {
       //console.log("key=" + key)
@@ -184,14 +226,14 @@ function SideMenu({
     
   })};
   const getFilterSubList = () => {
-    console.log(" I am in getFilterSubList")
-    console.log(subMenuIndex)
+    // console.log(" I am in getFilterSubList")
+    // console.log(subMenuIndex)
     return Object.entries(filters).map(([key, value], index) => {
       return(
         subMenuIndex[key]  ?
         <Segment raised key={key}>
         <Accordion className="ebs-borderless" fluid as={Menu.Item}>
-        {filters && createFilterSubSections(key)}
+        {filters && getFilterSubMenu(key)}
         </Accordion> 
         </Segment> : null
        
@@ -239,7 +281,7 @@ function SideMenu({
     } 
   };
 
-  const createMenuItem_for_filterSubSections = (parent, obj) => {
+  const getFilterSubMenuItems = (parent, obj) => {
       return (
         <Grid className="ebs-filters-submenu">
           {obj.map((sub, index) => {
@@ -280,7 +322,7 @@ function SideMenu({
     
   };
 
-  const createFilterSubSections = (val) =>{
+  const getFilterSubMenu = (val) =>{
    
     return Object.entries(filters).map(([key, value], index) => {
       if(key == val){
@@ -297,7 +339,7 @@ function SideMenu({
               <Accordion.Content
                 key={key}
                 active={activeIndex[key] = activeIndex[key]== undefined ? true : activeIndex[key]}
-                content={createMenuItem_for_filterSubSections(key, value)}
+                content={getFilterSubMenuItems(key, value)}
               />
             </Menu.Item>
           );
@@ -326,30 +368,7 @@ function SideMenu({
     });
   };
 
-  const fetchData = useCallback(
-    async (reqURL: string) => {
-      console.log("reqURL=" + reqURL)
-      const config = {
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      };
-      setLoading(true);
-      await axios
-        .get(reqURL, config)
-        .then((res) => {
-          if (res.status === 200) {
-            setFilters(res.data);
-          }
-        })
-        .catch((err) => console.log(err))
-        .finally(() => {
-          setLoading(false);
-        });
-    },
-    
-    [query]
-  );
+  
   
   const fetchFilters = useCallback(async () => {
     const config = {
