@@ -17,7 +17,7 @@ import ResistomeView from "../../components/views/isolates/ResistomeView";
 import VirulomeView from "../../components/views/isolates/VirulomeView";
 import TBSummaryView from "../../components/views/isolates/TBSummaryView";
 import SequenceView from "../../components/views/isolates/SequenceView";
-import TestView from "../../components/views/isolates/SequenceView";
+//import TestView from "../../components/views/isolates/SequenceView";
 import SideMenu from "../../components/views/isolates/SideMenu";
 
 /**
@@ -31,7 +31,7 @@ function Isolates() {
   const [isTabChange, setTabChange] = useState<boolean>(false)
 
   const [panes, setPanes] = useState([
-    {
+    /* {
       menuItem: "Test",
       render: function getContent() {
         
@@ -46,7 +46,7 @@ function Isolates() {
           />
         );
       },
-    },
+    }, */
     {
       menuItem: "Sequence",
       render: function getContent() {
@@ -178,7 +178,7 @@ function Isolates() {
   useEffect(() => {
     
     setPanes([
-      {
+      /* {
         menuItem: "Test",
         render: function getContent() {
           return (
@@ -192,7 +192,7 @@ function Isolates() {
             />
           );
         },
-      },
+      }, */
       {
         menuItem: "Sequence",
         render: function getContent() {

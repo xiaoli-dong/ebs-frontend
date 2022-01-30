@@ -117,14 +117,17 @@ function SideMenu({
   );
 
   const fetchData = useCallback(
-    async () => {
-      
+    async (abortController: AbortController) => {
+
+      try{
       const config = {
         headers: {
           Authorization: "Bearer " + accessToken,
         },
+        signal: abortController.signal
       };
       setLoading(true);
+      
 
       const endPoint = ApiDict.find((d) => d.tabName === currentTab).endPoint;
       console.log("url=" + API + endPoint + "/?" + query)
@@ -138,37 +141,52 @@ function SideMenu({
 
           }
         })
-        .catch((err) => console.log(err))
-        .finally(() => {
-          setLoading(false);
-        });
+      } 
+      catch (error) {
+        console.log("error.name=" + error.name)
+        console.log('error', error);
+    }
+    finally {
+      setLoading(false);
+    };
+    
     },
     
     [query, currentTab]
   );
   useEffect(() => {
+    
     console.log("useEffect 0")
-    fetchData()
-    return () => {
-      setQueryset([]);
+    const abortController = new AbortController();
+    
+    setQueryset([]);
       setQuery("")
       setSubMenuIndex({})
+      fetchData(abortController)
+    //clean-up function
+    return () => {
+      abortController.abort(); 
+      
+      
     }
   }, [currentTab]);
 
   useEffect(() => {
     console.log("useEffect 2")
     console.log(queryset)
+    const abortController = new AbortController();
       setQuery(
         queryset
           .filter((obj) => obj.keywords.length > 0)
           .map((obj) => obj.field + "=" + obj.keywords.join(","))
           .join("&")
       );
-      fetchData()
+      fetchData(abortController)
+      return () => {
+        abortController.abort(); 
+      }
   }, [queryset, query]);
   
-
   const handleClick = (e, data) => {
     console.log("handle click")
     console.log(data)
