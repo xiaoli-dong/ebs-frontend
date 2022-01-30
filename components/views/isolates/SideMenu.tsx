@@ -148,25 +148,14 @@ function SideMenu({
   );
   useEffect(() => {
     console.log("useEffect 0")
-    // setQueryset([]);
-    //   setQuery("")
-    //fetchFilters();
-   /*  fetchData(
-      URLHandler(URL.uri, "", "", "", undefined, undefined, null).url
-    ); */
     fetchData()
     return () => {
-
+      setQueryset([]);
+      setQuery("")
+      setSubMenuIndex({})
     }
   }, [currentTab]);
 
-  /* useEffect(() => {
-    console.log("useEffect 1")
-    // setQueryset([]);
-    // setQuery("")
-    
-  }, [isTabChange]); */
-  // const URL = URLHandler(API_SEQUENCE_METADATA);
   useEffect(() => {
     console.log("useEffect 2")
     console.log(queryset)
@@ -176,9 +165,6 @@ function SideMenu({
           .map((obj) => obj.field + "=" + obj.keywords.join(","))
           .join("&")
       );
-       /* fetchData(
-        URLHandler(URL.uri, query, "", "", undefined, undefined, null).url
-      );  */
       fetchData()
   }, [queryset, query]);
   
@@ -227,9 +213,10 @@ function SideMenu({
     console.log(data)
     const {label, checked} = data
    setSubMenuIndex({ ...subMenuIndex, [label]: checked });
-    /* {Object.entries(subMenuIndex).map(([key, val], i) => (
+    
+   /* {Object.entries(subMenuIndex).map(([key, val], i) => (
       console.log("key=" + key + " val=" + val)
-  ))}
+      ))}
     */
   }
   const getFilterList = () => {
