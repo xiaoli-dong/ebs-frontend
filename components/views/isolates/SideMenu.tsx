@@ -137,6 +137,7 @@ function SideMenu({
   const URL = URLHandler(API_SEQUENCE_METADATA);
   useEffect(() => {
     console.log("useEffect 2")
+    console.log(queryset)
       setQuery(
         queryset
           .filter((obj) => obj.keywords.length > 0)
@@ -154,6 +155,9 @@ function SideMenu({
     console.log(data)
     const { index, active } = data;
     setActiveIndex({ ...activeIndex, [index]: !active });
+    {Object.entries(activeIndex).map(([key, val], i) => (
+      console.log("key=" + key + " val=" + val)
+  ))}
     
   };
   
@@ -184,41 +188,27 @@ function SideMenu({
     },
     [queryset]
   );
-  const handleFilterListChange =useCallback ((e, data) => {
+  
+  const handleFilterListChange =(e, data) => {
     console.log("handleFilterListChange data=")
     console.log(data)
-    
-    console.log("label=" + data.label + " checked=" + data.checked)
-    setSubMenuIndex({ ...subMenuIndex, [data.label]: data.checked });
-    //TODO should handle uncheck effect here
-   //disable sublist filter of the section
-   console.log(queryset)
-    if(!data.checked){
-      /* setQuery(
-        queryset
-          .filter((obj) => obj.keywords.length > 0)
-          .map((obj) => obj.field !== data.label ? obj.field + "=" + obj.keywords.join(",") : "")
-          .join("&")
-      ); */
-
-      console.log("after uncheck")
-      console.log(queryset)
-      console.log("leaving handleFilterListChange")
-    }
-    
-  }, [queryset]
-  );
+    const {label, checked} = data
+   setSubMenuIndex({ ...subMenuIndex, [label]: checked });
+    {Object.entries(subMenuIndex).map(([key, val], i) => (
+      console.log("key=" + key + " val=" + val)
+  ))}
+   
+  }
   const getFilterList = () => {
     return Object.entries(filters).map(([key, value], index) => {
-      //console.log("key=" + key)
-      //getSubMenuItem(key, value)
+      console.log(key)
       return(
         <Grid.Row key={key}>
         <Grid.Column>
           <Checkbox 
             label={key}
             onChange={handleFilterListChange}
-            checked ={subMenuIndex[key]}
+            checked ={subMenuIndex[key] =  subMenuIndex[key] == undefined ? false :  subMenuIndex[key] }
          />
         </Grid.Column>
       </Grid.Row>
@@ -226,9 +216,11 @@ function SideMenu({
     
   })};
   const getFilterSubList = () => {
-    // console.log(" I am in getFilterSubList")
-    // console.log(subMenuIndex)
+    console.log(" I am in getFilterSubList")
+    console.log(subMenuIndex)
     return Object.entries(filters).map(([key, value], index) => {
+      console.log("getFilterSubList key=" + key + " isMenuIndex=" + subMenuIndex[key])
+
       return(
         subMenuIndex[key]  ?
         <Segment raised key={key}>
@@ -419,16 +411,16 @@ function SideMenu({
 <Segment className="ebs-borderless ebs-shadowless">
   { filters && getFilterList ()}
 </Segment>
-<div >
+
   
       {filters && getFilterSubList()}
-        </div>
+    
       
-     <div className="ebs-scrollable-inner">
-        {/* <Accordion className="ebs-borderless" fluid as={Menu} vertical>
+    {/*  <div className="ebs-scrollable-inner">
+         <Accordion className="ebs-borderless" fluid as={Menu} vertical>
           {filters && getFilterMenu()}
-        </Accordion> */}
-      </div>
+        </Accordion> 
+      </div> */}
     
       <Segment className="ebs-borderless ebs-shadowless">
         <Menu.Item
