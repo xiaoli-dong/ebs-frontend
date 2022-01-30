@@ -89,7 +89,7 @@ function SideMenu({
   const [isFilterOn, setFilterOn] = useState<boolean>(false)
   const [subMenuIndex, setSubMenuIndex] = useState({})
  
-  const fetchData = useCallback(
+  const fetchData_org = useCallback(
     async (reqURL: string) => {
       console.log("reqURL=" + reqURL)
       const config = {
@@ -115,14 +115,46 @@ function SideMenu({
     
     [query]
   );
+
+  const fetchData = useCallback(
+    async () => {
+      
+      const config = {
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      };
+      setLoading(true);
+
+      const endPoint = ApiDict.find((d) => d.tabName === currentTab).endPoint;
+      console.log("url=" + API + endPoint + "/?" + query)
+      await axios
+       // .get(reqURL, config)
+       .get(API + endPoint + "/?" + query, config)
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.data)
+            setFilters(res.data);
+
+          }
+        })
+        .catch((err) => console.log(err))
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+    
+    [query, currentTab]
+  );
   useEffect(() => {
     console.log("useEffect 0")
     // setQueryset([]);
     //   setQuery("")
     //fetchFilters();
-    fetchData(
+   /*  fetchData(
       URLHandler(URL.uri, "", "", "", undefined, undefined, null).url
-    );
+    ); */
+    fetchData()
     return () => {
 
     }
@@ -134,7 +166,7 @@ function SideMenu({
     // setQuery("")
     
   }, [isTabChange]); */
-  const URL = URLHandler(API_SEQUENCE_METADATA);
+  // const URL = URLHandler(API_SEQUENCE_METADATA);
   useEffect(() => {
     console.log("useEffect 2")
     console.log(queryset)
@@ -144,9 +176,10 @@ function SideMenu({
           .map((obj) => obj.field + "=" + obj.keywords.join(","))
           .join("&")
       );
-       fetchData(
+       /* fetchData(
         URLHandler(URL.uri, query, "", "", undefined, undefined, null).url
-      ); 
+      );  */
+      fetchData()
   }, [queryset, query]);
   
 
@@ -188,20 +221,20 @@ function SideMenu({
     },
     [queryset]
   );
-  
+ 
   const handleFilterListChange =(e, data) => {
     console.log("handleFilterListChange data=")
     console.log(data)
     const {label, checked} = data
    setSubMenuIndex({ ...subMenuIndex, [label]: checked });
-    {Object.entries(subMenuIndex).map(([key, val], i) => (
+    /* {Object.entries(subMenuIndex).map(([key, val], i) => (
       console.log("key=" + key + " val=" + val)
   ))}
-   
+    */
   }
   const getFilterList = () => {
     return Object.entries(filters).map(([key, value], index) => {
-      console.log(key)
+     
       return(
         <Grid.Row key={key}>
         <Grid.Column>
@@ -216,10 +249,10 @@ function SideMenu({
     
   })};
   const getFilterSubList = () => {
-    console.log(" I am in getFilterSubList")
-    console.log(subMenuIndex)
+    // console.log(" I am in getFilterSubList")
+    // console.log(subMenuIndex)
     return Object.entries(filters).map(([key, value], index) => {
-      console.log("getFilterSubList key=" + key + " isMenuIndex=" + subMenuIndex[key])
+      // console.log("getFilterSubList key=" + key + " isMenuIndex=" + subMenuIndex[key])
 
       return(
         subMenuIndex[key]  ?
