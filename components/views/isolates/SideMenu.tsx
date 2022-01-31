@@ -234,8 +234,18 @@ function SideMenu({
     
    /* {Object.entries(subMenuIndex).map(([key, val], i) => (
       console.log("key=" + key + " val=" + val)
-      ))}
-    */
+      ))} */
+      console.log("handleFilterListChange queryset=" + JSON.stringify(queryset))
+     
+      //reset queryset when uncheck the squence filter list
+    if(!checked){
+      console.log(label + " not checked")
+      let copy_of_queryset = [...queryset]
+       let new_array =  copy_of_queryset .filter(item => item.field !== label)
+        setQueryset(new_array)
+      
+      console.log("handleFilterListChange queryset1=" +JSON.stringify(queryset))
+    }
   }
   const getFilterList = () => {
     return Object.entries(filters).map(([key, value], index) => {
