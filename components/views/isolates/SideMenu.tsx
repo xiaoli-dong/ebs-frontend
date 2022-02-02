@@ -202,13 +202,24 @@ function SideMenu({
     (e, data) => {
       const [mykey, myvalue] = data.value.split("--");
       const [key, value] = [mykey, encodeURIComponent(myvalue)]
+     
       console.log("handleChange key=" + key + " value=" + value)
       setChecked(e.target.checked)
+
+      //range filter
+      let suffix = ""
+      if(currentTab == "Assembly" &&  (key == "count" || key === "bp")){
+        suffix = "_range"
+      }
+      else if(currentTab == "Stats" &&  key == "CDS"){
+        suffix = "_range"
+      }
+
       setQueryset(
         queryset.length > 0
-          ? queryset.find((obj) => obj.field === key)
+          ? queryset.find((obj) => obj.field === key+suffix)
             ? queryset.map((obj) =>
-                obj.field === key
+                obj.field === key+suffix
                   ? {
                       ...obj,
                       keywords: obj.keywords.includes(value)
@@ -219,8 +230,8 @@ function SideMenu({
                     }
                   : { ...obj }
               )
-            : [...queryset, { field: key, keywords: [value] }]
-          : [{ field: key, keywords: [value] }]
+            : [...queryset, { field: key+suffix, keywords: [value] }]
+          : [{ field: key+suffix, keywords: [value] }]
       );
     },
     [queryset]
@@ -287,11 +298,13 @@ function SideMenu({
       return (
         <Grid className="ebs-filters-submenu">
           {obj.map((sub, index) => {
+          
             let prefix = "";
             if (parent === "project__id") {
               if (currentTab !== "Sequence") {
                 if (currentTab === "Assembly") {
                   prefix = "sequence__";
+                  
                 } else {
                   prefix = "assembly__sequence__";
                 }
@@ -351,7 +364,7 @@ function SideMenu({
                     checked = {checked}
                   />
                 </Grid.Column>
-                <Grid.Column width={4} floated="right">
+                <Grid.Column width={3} floated="right">
                   <Label color="grey">{sub["total"]}</Label>
                 </Grid.Column>
               </Grid.Row>
