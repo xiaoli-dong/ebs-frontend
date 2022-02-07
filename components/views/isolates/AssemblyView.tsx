@@ -100,11 +100,14 @@ function AssemblyView({
     },
     [headers, invertSelection]
   );
+  useEffect(() => {
+    fetchData(
+      URLHandler(URL.uri, query, MODULE, search, page, pageSize, ordering).url
+    );
+  }, [page, pageSize, search, ordering, query]);
 
-  
   useEffect(() => {
     if (isRefreshing) {
-      console.log("assemblyview.tsx useEffect refreshing=true")
       fetchData(URLHandler(URL.uri, "", MODULE, "", 1, 20, null).url);
       setRefreshing(false);
     }
@@ -112,23 +115,12 @@ function AssemblyView({
 
   useEffect(() => {
     if (isTabChange) {
-      console.log("assemblyview.tsx useEffect tabchange=true")
       fetchData(URLHandler(URL.uri, "", MODULE, "", 1, 20, null).url);
       setTabChange(false);
     }
   }, [isTabChange]); 
 
-  useEffect(() => {
-    if(!isRefreshing && !isTabChange){
-      console.log("assemblyview.tsx useEffect isTabChange=flase && isRefreshing=false query=" + query + "...search=" + search)
-      fetchData(
-        URLHandler(URL.uri, query, MODULE, search, page, pageSize, ordering).url
-      );
-    }
-  }, [isTabChange, isRefreshing, page, pageSize, search, ordering, query]);
-
   
-  console.log("AssemblyView before returning..............")
   return (
     <Tab.Pane>
       <Grid padded>

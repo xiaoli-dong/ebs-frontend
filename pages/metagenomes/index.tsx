@@ -23,6 +23,8 @@ function Metagenomes() {
 
   const [query, setQuery] = useState<string>("");
   const [search, setSearch] = useState<string>("");
+  const [isTabChange, setTabChange] = useState<boolean>(false)
+
   const [panes, setPanes] = useState([
     {
       menuItem: "Sequence",
@@ -31,8 +33,10 @@ function Metagenomes() {
           <SequenceView
             query={query}
             search={search}
+            isTabChange={isTabChange}
             setQuery={setQuery}
             setSearch={setSearch}
+            setTabChange={setTabChange}
           />
         );
       },
@@ -42,10 +46,12 @@ function Metagenomes() {
       render: function getContent() {
         return (
           <AssemblyView
-            query={query}
-            search={search}
-            setQuery={setQuery}
-            setSearch={setSearch}
+          query={query}
+          search={search}
+          isTabChange={isTabChange}
+          setQuery={setQuery}
+          setSearch={setSearch}
+          setTabChange={setTabChange}
           />
         );
       },
@@ -69,10 +75,12 @@ function Metagenomes() {
         render: function getContent() {
           return (
             <SequenceView
-              query={query}
-              search={search}
-              setQuery={setQuery}
-              setSearch={setSearch}
+            query={query}
+            search={search}
+            isTabChange={isTabChange}
+            setQuery={setQuery}
+            setSearch={setSearch}
+            setTabChange={setTabChange}
             />
           );
         },
@@ -82,10 +90,12 @@ function Metagenomes() {
         render: function getContent() {
           return (
             <AssemblyView
-              query={query}
-              search={search}
-              setQuery={setQuery}
-              setSearch={setSearch}
+            query={query}
+            search={search}
+            isTabChange={isTabChange}
+            setQuery={setQuery}
+            setSearch={setSearch}
+            setTabChange={setTabChange}
             />
           );
         },
@@ -106,11 +116,13 @@ function Metagenomes() {
       >
         {currentTab && (
           <SideMenu
-            currentTab={currentTab.panes[currentTab.activeIndex].menuItem}
-            query={query}
-            wideView={wideView}
-            setWideView={setWideView}
-            setQuery={setQuery}
+          currentTab={currentTab.panes[currentTab.activeIndex].menuItem}
+          query={query}
+          wideView={wideView}
+          isTabChange = {isTabChange}
+          setWideView={setWideView}
+          setQuery={setQuery}
+          setTabChange ={setTabChange}
           />
         )}
       </div>

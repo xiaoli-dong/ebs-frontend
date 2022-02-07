@@ -32,8 +32,10 @@ import TablePlaceholder from "../../global/TablePlaceholder";
 function SequenceView({
   query,
   search,
+  isTabChange,
   setQuery,
   setSearch,
+  setTabChange
 }: JIYSharedStateLayoutContext): JSX.Element {
   //const MODULE = "TB";
   const MODULE = ""

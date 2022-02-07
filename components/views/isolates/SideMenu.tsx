@@ -151,20 +151,23 @@ function SideMenu({
     };
     
     },
-    
-    [query, currentTab]
+    [ currentTab]
+   //with the following option, the sidemenu will reload when query changes or any of the checkbox was checked 
+    //[query, currentTab]
   );
   useEffect(() => {
-    
+    let isMounted = true;    
     console.log("useEffect 0")
     const abortController = new AbortController();
-    
+    if (isMounted){
     setQueryset([]);
       setQuery("")
       setSubMenuIndex({})
       fetchData(abortController)
+    }
     //clean-up function
     return () => {
+      isMounted = false 
       abortController.abort(); 
       
       
@@ -172,17 +175,32 @@ function SideMenu({
   }, [currentTab]);
 
   useEffect(() => {
+    let isMounted = true;    
     console.log("useEffect 2")
     console.log(queryset)
     const abortController = new AbortController();
+    if (isMounted){
       setQuery(
         queryset
           .filter((obj) => obj.keywords.length > 0)
-          .map((obj) => obj.field + "=" + obj.keywords.join(","))
+          .map( (obj) => obj.field + "=" + obj.keywords.join(",")
+          /* .map( (obj) =>{
+            let myarray = []
+            Object.entries(obj.keywords).map(([key, value], index) => {
+              //console.log("key=" + key + " value=" + value + " index=" + index" )
+              console.log(key + ":" + value + ":" + index )
+              myarray.push(obj.field + "=" + value)
+              obj.field + "=" + value
+            })
+            return myarray.join("&")
+          } */
+          )
           .join("&")
       );
       fetchData(abortController)
+    }
       return () => {
+        isMounted = false 
         abortController.abort(); 
       }
   }, [queryset, query]);
@@ -205,21 +223,11 @@ function SideMenu({
      
       console.log("handleChange key=" + key + " value=" + value)
       setChecked(e.target.checked)
-
-      //range filter
-      let suffix = ""
-      if(currentTab == "Assembly" &&  (key == "count" || key === "bp")){
-        suffix = "_range"
-      }
-      else if(currentTab == "Stats" &&  key == "CDS"){
-        suffix = "_range"
-      }
-
       setQueryset(
         queryset.length > 0
-          ? queryset.find((obj) => obj.field === key+suffix)
+          ? queryset.find((obj) => obj.field === key)
             ? queryset.map((obj) =>
-                obj.field === key+suffix
+                obj.field === key
                   ? {
                       ...obj,
                       keywords: obj.keywords.includes(value)
@@ -230,8 +238,8 @@ function SideMenu({
                     }
                   : { ...obj }
               )
-            : [...queryset, { field: key+suffix, keywords: [value] }]
-          : [{ field: key+suffix, keywords: [value] }]
+            : [...queryset, { field: key, keywords: [value] }]
+          : [{ field: key, keywords: [value] }]
       );
     },
     [queryset]

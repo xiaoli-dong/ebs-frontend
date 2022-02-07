@@ -67,7 +67,7 @@ function ColumnSelector({ headers, setHeaders }): JSX.Element {
                 defaultChecked={column.display === "visible"}
                 type="checkbox"
               />
-              <label>{column.alias ? column.alias : column.value}</label>nm==           </Grid.Column>
+              <label>{column.alias ? column.alias : column.value}</label></Grid.Column>
           ))}
     </Grid>
   );

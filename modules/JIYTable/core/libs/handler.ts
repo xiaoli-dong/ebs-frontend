@@ -152,7 +152,7 @@ export function SequencesDataHandler(
       isSelected: invertSelection,
       data: flatSequences,
     })
-  );
+    );
 
   return {
     headers: schema,
@@ -350,9 +350,7 @@ export function AnnotationDataHandler(
   );
 
   const data: Array<JIYRecordContext<FlatAnnotationWithAttr>> = rearranged.map(
-    (
-      flatAnnotationWithAttr: FlatAnnotationWithAttr
-    ): JIYRecordContext<FlatAnnotationWithAttr> => {
+    (flatAnnotationWithAttr: FlatAnnotationWithAttr): JIYRecordContext<FlatAnnotationWithAttr> => {
       return {
         objType: "annotation",
         dynamicColumns: true,
