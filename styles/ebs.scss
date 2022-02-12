@@ -139,19 +139,28 @@ $sidebar-width: 20%;
 }
 
 .ebs-virulome-absent {
-  //background-color: #f3f2f2;
+  background-color: grey;
 }
 .ebs-virulome-lt {
-  background-color: hsla(34, 100%, 52%, 0.952);
+  background-color: orange;
+}
+.ebs-virulome-ge {
+  background-color: greenyellow
 }
 .ebs-resistome-absent {
-  //background-color: #f3f2f2;
+  background-color: grey
 }
 .ebs-resistome-lt {
-  background-color: hsla(34, 100%, 52%, 0.952);
+  background-color: orange;
 }
 .ebs-resistome-ge {
-  background-color: #25cc8c;
+  background-color:greenyellow
+}
+.ebs-drug_resistance-absent{
+  background-color: grey
+}
+.ebs-drup_resistance-show{
+  background-color: greenyellow
 }
 /*
  * Fix (Unsupported at the current version and Browser specific)

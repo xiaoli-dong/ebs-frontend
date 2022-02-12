@@ -7,6 +7,7 @@
  */
 
 import { Dispatch, SetStateAction } from "react";
+import { SemanticCOLORS, SemanticSIZES } from "semantic-ui-react";
 
 export interface JIYURLContext {
   api: string;
@@ -50,6 +51,7 @@ export interface JIYTableStateContext<T, R> {
   ordering: JIYOrderingContext;
   headers: Array<JIYHeaderContext>;
   records: Array<JIYRecordContext<T>>;
+  legend: JIYTableLegendContext;
   isLoading: boolean;
   isRefreshing: boolean;
   invertSelection: boolean;
@@ -61,6 +63,7 @@ export interface JIYTableStateContext<T, R> {
   setOrdering: Dispatch<SetStateAction<JIYOrderingContext>>;
   setHeaders: Dispatch<SetStateAction<Array<JIYHeaderContext>>>;
   setRecords: Dispatch<SetStateAction<Array<JIYRecordContext<T>>>>;
+  setLegend: Dispatch<SetStateAction<JIYTableLegendContext >>;
   setLoading: Dispatch<SetStateAction<boolean>>;
   setRefreshing: Dispatch<SetStateAction<boolean>>;
   setInvertSelection: Dispatch<SetStateAction<boolean>>;
@@ -153,3 +156,23 @@ export interface JIYSharedStateLayoutContext {
   setSearch: Dispatch<SetStateAction<string>>;
   setTabChange: Dispatch<SetStateAction<boolean>>;
 }
+
+/* export interface JIYTableLegendContext {
+  colors: Array<SemanticCOLORS>;
+  texts: Array<string>;
+  sizes: Array<SemanticSIZES>;
+  
+  setColors: Dispatch<SetStateAction<Array<SemanticCOLORS>>>;
+  setTexts: Dispatch<SetStateAction<Array<string>>>;
+  setSizes: Dispatch<SetStateAction<SemanticSIZES>>;
+} */
+export interface JIYTableLegendContext {
+  colors: Array<string>;
+  texts: Array<string>;
+  sizes: Array<string>;
+  
+  setColors: Dispatch<SetStateAction<Array<string>>>;
+  setTexts: Dispatch<SetStateAction<Array<string>>>;
+  setSizes: Dispatch<SetStateAction<string>>;
+}
+

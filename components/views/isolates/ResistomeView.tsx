@@ -8,7 +8,7 @@
 
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
-import { Grid, Tab } from "semantic-ui-react";
+import { Grid, Tab, Label, SemanticCOLORS, SemanticSIZES } from "semantic-ui-react";
 import { API_RESISTOME } from "../../../config/apis";
 import { useAuth } from "../../../middleware/AuthProvider";
 import { FlatResistomeWithProfile } from "../../../models/Isolate";
@@ -17,6 +17,7 @@ import {
   JIYOrderingContext,
   JIYRecordContext,
   JIYSharedStateLayoutContext,
+  JIYTableLegendContext ,
 } from "../../../modules/JIYTable/core/models/JIYContexts";
 import IsolatesVizView from "./VizView";
 import {
@@ -42,7 +43,7 @@ function ResistomeView({
   const MODULE = ""
   const PATH = "Isolates,Resistome";
   const URL = URLHandler(API_RESISTOME);
-
+  const currentTab = "Resistome"
   const { accessToken } = useAuth();
 
   const [next, setNext] = useState<string>(null);
@@ -65,6 +66,33 @@ function ResistomeView({
     Array<JIYRecordContext<FlatResistomeWithProfile>>
   >([]);
 
+  
+
+let  mycolors = [
+    'orange',
+    'olive',
+    'grey'
+  ] 
+  
+  let mytexts = [
+    '<95% gene coverage',
+    '>=95% gene coverage',
+     'absent'
+  ]
+  
+ let mysizes = [
+   "huge" ,
+   "huge",
+   "huge"
+ 
+]
+
+
+const[colors, setColors] = useState<Array<string>>(mycolors);
+const[texts, setTexts] = useState<Array<string>>(mytexts);
+const[sizes, setSizes] =  useState<Array<string>>(mysizes);
+const [legend, setLegend] = useState<JIYTableLegendContext>(null);
+
   const fetchData = useCallback(
     async (reqURL: string) => {
       const config = {
@@ -74,6 +102,7 @@ function ResistomeView({
       };
 
       setLoading(true);
+     
       await axios
         .get(reqURL, config)
         .then((res) => {
@@ -90,6 +119,7 @@ function ResistomeView({
             //headers || setHeaders(cols);
             setHeaders(cols);
             setRecords(rows);
+            
           }
         })
         .catch((err) => console.log(err))
@@ -101,12 +131,14 @@ function ResistomeView({
   );
 
   useEffect(() => {
+    
     fetchData(
       URLHandler(URL.uri, query, MODULE, search, page, pageSize, ordering).url
     );
   }, [page, pageSize, search, ordering, query]);
 
   useEffect(() => {
+   
     if (isRefreshing) {
       fetchData(URLHandler(URL.uri, "", MODULE, "", 1, 20, null).url);
       setRefreshing(false);
@@ -114,18 +146,25 @@ function ResistomeView({
   }, [isRefreshing]);
 
   useEffect(() => {
+    setLegend({...legend, colors: colors, sizes: sizes, texts: texts})
+console.log('legendddddddddddddddddddddddddddddddddddddddddddddddddd')
+console.log(legend)
+
     if (isTabChange) {
       fetchData(URLHandler(URL.uri, "", MODULE, "", 1, 20, null).url);
       setTabChange(false);
     }
   }, [isTabChange]); 
-
+  
   return (
+    
     <Tab.Pane>
+     
       <Grid padded>
         <Grid.Row>
           <Grid.Column>
             {headers && records ? (
+              
               <IsolatesVizView
                 title={MODULE}
                 path={PATH}
@@ -140,6 +179,7 @@ function ResistomeView({
                 ordering={ordering}
                 headers={headers}
                 records={records}
+                legend ={legend}
                 isLoading={isLoading}
                 isRefreshing={isRefreshing}
                 invertSelection={invertSelection}
@@ -151,6 +191,7 @@ function ResistomeView({
                 setOrdering={setOrdering}
                 setHeaders={setHeaders}
                 setRecords={setRecords}
+                setLegend={setLegend}
                 setLoading={setLoading}
                 setRefreshing={setRefreshing}
                 setInvertSelection={setInvertSelection}

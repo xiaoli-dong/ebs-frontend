@@ -309,8 +309,10 @@ function SideMenu({
           
             let prefix = "";
             if (parent === "project__id") {
+              
+              console.log(currentTab)
               if (currentTab !== "Sequence") {
-                if (currentTab === "Assembly") {
+                if (currentTab === "Assembly"){
                   prefix = "sequence__";
                   
                 } else {
@@ -351,7 +353,7 @@ function SideMenu({
             let prefix = "";
             if (parent === "project__id") {
               if (currentTab !== "Sequence") {
-                if (currentTab === "Assembly") {
+                if( (currentTab === "Assembly")  || (currentTab === "TBProfile")){
                   prefix = "sequence__";
                 } else {
                   prefix = "assembly__sequence__";
@@ -378,7 +380,9 @@ function SideMenu({
               </Grid.Row>
             );
           })}
+          
         </Grid>
+       
       );
     
   };
@@ -407,52 +411,7 @@ function SideMenu({
         
       }
   })}
-  const getFilterMenu = () => {
-    
-    return Object.entries(filters).map(([key, value], index) => {
-      return (
-        <Menu.Item key={index}>
-          <Accordion.Title
-            active={activeIndex[index]}
-            content={key}
-            index={index}
-            onClick={handleClick}
-          />
-          
-          <Accordion.Content
-            key={index}
-            active={activeIndex[index]}
-            content={getSubMenuItem(key, value)}
-          />
-        </Menu.Item>
-      );
-    });
-  };
-
-  
-  
-  const fetchFilters = useCallback(async () => {
-    const config = {
-      headers: {
-        Authorization: "Bearer " + accessToken,
-      },
-    };
-    const endPoint = ApiDict.find((d) => d.tabName === currentTab).endPoint;
-    //setup the filter menu at the left side
-    await axios
-      	.get(API + endPoint, config)
-	      .then((res) => {
-	      console.log(API + endPoint)
-        console.log(res.data);
-        setChecked(false)
-        setFilters(res.data);
-      })
-      .catch((err) => {
-        setFilters({ menu: [{ menu: "No filter data found", total: "N/A" }] });
-        console.log(err);
-      });
-  }, [currentTab]);
-  
+ 
  
 
   return wideView ? (
@@ -485,11 +444,7 @@ function SideMenu({
       {filters && getFilterSubList()}
     
       
-    {/*  <div className="ebs-scrollable-inner">
-         <Accordion className="ebs-borderless" fluid as={Menu} vertical>
-          {filters && getFilterMenu()}
-        </Accordion> 
-      </div> */}
+   
     
       <Segment className="ebs-borderless ebs-shadowless">
         <Menu.Item

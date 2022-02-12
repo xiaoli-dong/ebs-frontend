@@ -17,6 +17,7 @@ import {
   JIYOrderingContext,
   JIYRecordContext,
   JIYSharedStateLayoutContext,
+  JIYTableLegendContext,
 } from "../../../modules/JIYTable/core/models/JIYContexts";
 import IsolatesVizView from "./VizView";
 import {
@@ -62,10 +63,32 @@ function TBSummaryView({
   const [excludedItems, setExcludedItems] = useState<
     Array<JIYRecordContext<FlatPsummary>>
   >([]);
+ 
+  let  mycolors = [
+    'olive',
+    'grey'
+  ] 
+  
+  let mytexts = [
+    'with drug resistance',
+     'without drug resistance'
+  ]
+  
+ let mysizes = [
+   "huge" ,
+   "huge",
+ 
+]
+
+
+const[colors, setColors] = useState<Array<string>>(mycolors);
+const[texts, setTexts] = useState<Array<string>>(mytexts);
+const[sizes, setSizes] =  useState<Array<string>>(mysizes);
+const [legend, setLegend] = useState<JIYTableLegendContext>(null);
 
   const fetchData = useCallback(
     async (reqURL: string) => {
-      console.log("7777777777777777777777777777777777")
+      
       console.log(reqURL)
       console.log(encodeURI(reqURL))
       const config = {
@@ -79,6 +102,7 @@ function TBSummaryView({
         .get(reqURL, config)
         .then((res) => {
           if (res.status === 200) {
+            console.log(res.data)
             const { headers: cols, records: rows } = handler(
               res.data.results,
               invertSelection
@@ -101,6 +125,7 @@ function TBSummaryView({
   );
 
   useEffect(() => {
+    console.log("profile ordering=" + JSON.stringify(ordering))
     fetchData(
       URLHandler(URL.uri, query, MODULE, search, page, pageSize, ordering).url
     );
@@ -114,6 +139,8 @@ function TBSummaryView({
   }, [isRefreshing]);
 
   useEffect(() => {
+    setLegend({...legend, colors: colors, sizes: sizes, texts: texts})
+   
     if (isTabChange) {
       fetchData(URLHandler(URL.uri, "", MODULE, "", 1, 20, null).url);
       setTabChange(false);
@@ -139,6 +166,7 @@ function TBSummaryView({
                 search={search}
                 ordering={ordering}
                 headers={headers}
+                legend={legend}
                 records={records}
                 isLoading={isLoading}
                 isRefreshing={isRefreshing}
@@ -151,6 +179,7 @@ function TBSummaryView({
                 setOrdering={setOrdering}
                 setHeaders={setHeaders}
                 setRecords={setRecords}
+                setLegend={setLegend}
                 setLoading={setLoading}
                 setRefreshing={setRefreshing}
                 setInvertSelection={setInvertSelection}

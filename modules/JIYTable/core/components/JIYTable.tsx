@@ -12,10 +12,11 @@ import { JIYTableStateContext } from "../models/JIYContexts";
 import JIYTableHeader from "./JIYTableHeader";
 import JIYCellRow from "./JIYCellRow";
 
-import { Grid, Ref, Sticky, Table } from "semantic-ui-react";
+import { Grid, Ref, Sticky, Table, Label, List, GridRow, SemanticCOLORS } from "semantic-ui-react";
 import JIYTableTools from "./JIYTableTools";
 import JIYTableCustomHead from "../plugins/JIYTableCustomHead";
 import { pick } from "../libs/gizmos";
+import { SemanticSIZES } from "semantic-ui-react/dist/commonjs/generic";
 
 /**
  * JIYTable
@@ -37,6 +38,7 @@ function JIYTable<T, R>({
   ordering,
   headers,
   records,
+  legend,
   isLoading,
   isRefreshing,
   invertSelection,
@@ -48,6 +50,7 @@ function JIYTable<T, R>({
   setOrdering,
   setHeaders,
   setRecords,
+  setLegend,
   setLoading,
   setRefreshing,
   setInvertSelection,
@@ -67,6 +70,9 @@ function JIYTable<T, R>({
     rootMargin: "-160px 0px 0px 0px",
     threshold: 0,
   };
+
+  console.log('legend in JIYTable tttttttttttttttttttttttttttttttttttttttt')
+  console.log(legend)
   const stickyTableHeaderRef = useCallback(
     (node: HTMLElement | null) => {
       if (tableHeaderObserver.current) tableHeaderObserver.current.disconnect();
@@ -154,12 +160,51 @@ function JIYTable<T, R>({
   const stopDragging = useCallback((e) => {
     setMouseDown(false);
   }, []);
+ 
+  
+  //const getLegend  = (colors, texts, sizes) => {
+  const getLegend  = () => {
+     if(legend){
+       let colors = legend.colors
+       let texts = legend.texts
+       let sizes = legend.sizes
+     
+      return (
+      
+        <Grid.Row>
+        <div  style={{paddingTop: 15, paddingBottom: 5, alignContent: 'center'}}>
+          <List divided selection horizontal verticalAlign='middle' key={path}>
+          <List.Item key="legend" >
+            Color legend: 
+            </List.Item>
+        {colors.map((color, index) => (
+             <List.Item key={color + '--' + index}>
+              
+         {/*  <Label color={color} key={color} size={sizes[index]} horizontal> */}
+          <Label color={color as SemanticCOLORS} key={color} size={sizes[index] as SemanticSIZES} horizontal>
+          </Label>
+          {texts[index]}
+          </List.Item>
+        ))}
+      
+        </List>
+      </div>
+      </Grid.Row>
+      ) 
+        }
+  
+  };
+
+  
 
   return (
     <Grid padded>
+      
       <Grid.Column>
         <div ref={stickyNodeMountPointRef}>
           <Grid padded>
+         
+
             <Grid.Row>
               <JIYTableCustomHead
                 title={path.split(",")[0]}
@@ -180,6 +225,7 @@ function JIYTable<T, R>({
                 setHeaderOnTop(false);
               }}
             >
+              
               <Grid.Row>
                 <JIYTableTools
                   title={title}
@@ -195,6 +241,7 @@ function JIYTable<T, R>({
                   ordering={ordering}
                   headers={headers}
                   records={records}
+                  legend={legend}
                   isLoading={isLoading}
                   isRefreshing={isRefreshing}
                   invertSelection={invertSelection}
@@ -206,13 +253,20 @@ function JIYTable<T, R>({
                   setOrdering={setOrdering}
                   setHeaders={setHeaders}
                   setRecords={setRecords}
+                  setLegend={setLegend}
                   setLoading={setLoading}
                   setRefreshing={setRefreshing}
                   setInvertSelection={setInvertSelection}
                   setExcludedItems={setExcludedItems}
                   handler={handler}
                 />
+               
               </Grid.Row>
+
+             
+              {console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=" + path)}
+                {legend &&  getLegend()}
+            
             </Sticky>
             {!isLoading && (
               <Ref innerRef={draggableWrapperRef}>

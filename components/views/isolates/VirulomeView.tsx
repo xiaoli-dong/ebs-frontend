@@ -17,6 +17,7 @@ import {
   JIYOrderingContext,
   JIYRecordContext,
   JIYSharedStateLayoutContext,
+  JIYTableLegendContext,
 } from "../../../modules/JIYTable/core/models/JIYContexts";
 import IsolatesVizView from "./VizView";
 import {
@@ -63,6 +64,30 @@ function VirulomeView({
   const [excludedItems, setExcludedItems] = useState<
     Array<JIYRecordContext<FlatVirulomeWithProfile>>
   >([]);
+  let  mycolors = [
+    'orange',
+    'olive',
+    'grey'
+  ] 
+  
+  let mytexts = [
+    '<95% gene coverage',
+    '>=95% gene coverage',
+     'absent'
+  ]
+  
+ let mysizes = [
+   "huge" ,
+   "huge",
+   "huge"
+ 
+]
+
+
+const[colors, setColors] = useState<Array<string>>(mycolors);
+const[texts, setTexts] = useState<Array<string>>(mytexts);
+const[sizes, setSizes] =  useState<Array<string>>(mysizes);
+const [legend, setLegend] = useState<JIYTableLegendContext>(null);
 
   const fetchData = useCallback(
     async (reqURL: string) => {
@@ -114,6 +139,8 @@ function VirulomeView({
   }, [isRefreshing]);
 
   useEffect(() => {
+    setLegend({...legend, colors: colors, sizes: sizes, texts: texts})
+    
     if (isTabChange) {
       fetchData(URLHandler(URL.uri, "", MODULE, "", 1, 20, null).url);
       setTabChange(false);
@@ -140,6 +167,7 @@ function VirulomeView({
                 ordering={ordering}
                 headers={headers}
                 records={records}
+                legend={legend}
                 isLoading={isLoading}
                 isRefreshing={isRefreshing}
                 invertSelection={invertSelection}
@@ -151,6 +179,7 @@ function VirulomeView({
                 setOrdering={setOrdering}
                 setHeaders={setHeaders}
                 setRecords={setRecords}
+                setLegend={setLegend}
                 setLoading={setLoading}
                 setRefreshing={setRefreshing}
                 setInvertSelection={setInvertSelection}

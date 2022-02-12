@@ -625,9 +625,15 @@ export function VirulomeDataHandler(
           value: "-",
           style: "ebs-virulome-absent",
         }
+        console.log("print keyset *********************************************")
+        console.log(key)
+        console.log(obj[key])
         
-    });
-
+    }
+    
+   
+    );
+   
     return {
       ...obj,
       DateCreated: new Date(obj.DateCreated).toLocaleDateString(
@@ -689,8 +695,52 @@ export function ProfileSummaryDataHandler(
       primary: value.primary,
     };
   });
-
+  const drugs =  [
+    'rifampicin', 
+    'isoniazid', 
+    'pyrazinamide', 
+    'ethambutol', 
+    'streptomycin',  
+    'fluoroquinolones', 
+    'moxifloxacin',
+    'ofloxacin', 
+    'levofloxacin',
+     'ciprofloxacin', 
+     'aminoglycosides', 
+     'amikacin', 
+    'kanamycin',
+    'capreomycin',
+    'ethionamide',
+    'para_aminosalicylic_acid',
+    'cycloserine',
+    'linezolid',
+    'bedaquiline',
+    'clofazimine',
+    'delamanid'
+  ]
+  //const drugs = ['amikacin', 'aminoglycosides']
   const customized = results.map((obj) => {
+  //  console.log("pppppppppppppppppppppppppppppppppppp")
+  //   console.log(obj)
+
+    drugs.forEach((key) => {
+      const v = obj[key]
+      obj[key] = v
+        ? {
+            value: v,
+            style:
+              v == '-'
+                ? "ebs-drug_resistance-absent"
+                : "ebs-drup_resistance-show"
+              
+          }
+        : {
+          value: "-",
+          style: "ebs-resistome-absent",
+        }
+        
+    });
+
     return {
       ...obj,
       DateCreated: new Date(obj.DateCreated).toLocaleDateString(

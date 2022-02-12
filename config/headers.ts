@@ -830,16 +830,23 @@ export const CUSTOM_HEADER_PSUMMARY = {
     display: "none",
     primary: false,
   },
-  project__id: {
-    name: "id",
-    value: "project__id",
+  sequence: {
+    name: "sequence",
+    value: "sequence",
+    alias: "Sequence",
+    display: "none",
+    primary: false,
+  },
+  sequence__project__id: {
+    name: "pid",
+    value: "sequence__project__id",
     alias: "Project ID",
     display: "visible",
     primary: false,
   },
-  project__title: {
+  sequence__project__title: {
     name: "title",
-    value: "project__title",
+    value: "sequence__project__title",
     alias: "Project Title",
     display: "none",
     primary: false,
@@ -862,14 +869,14 @@ export const CUSTOM_HEADER_PSUMMARY = {
     name: "SequencerModel",
     value: "sequence__SequencerModel",
     alias: "Sequencer Model",
-    display: "none",
+    display: "visible",
     primary: false,
   },
   sequence__CenterName: {
     name: "CenterName",
     value: "sequence__CenterName",
     alias: "Center Name",
-    display: "visible",
+    display: "hidden",
     primary: false,
   },
   pct_reads_mapped: {
@@ -1102,9 +1109,10 @@ export const CUSTOM_HEADER_SEQUENCE = {
   },
   Projectid: {
     name: "Projectid",
-    value: "project__id", //need to check backend
+    //value: "project__id", //need to check backend
+    value: "project", //need to check backend
     alias: "Project ID",
-    display: "hidden",
+    display: "visible",
     primary: false,
   },
   SampleName: {
