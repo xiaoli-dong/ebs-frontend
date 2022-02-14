@@ -21,6 +21,7 @@ import {
   DropdownMenu,
   Button,
   Modal,
+  Input,
 } from "semantic-ui-react";
 
 import {
@@ -293,63 +294,32 @@ function SideMenu({
         <Segment raised key={key}>
         <Accordion className="ebs-borderless" fluid as={Menu.Item}>
         {filters && getFilterSubMenu(key)}
+        
         </Accordion> 
         </Segment> : null
        
       )
     })
     }
-  const getSubMenuItem = (parent, obj) => {
+    const isIterable = (value) => {
+      return Symbol.iterator in Object(value);
+    }
+    const options = [
+      { key: 'MB', text: 'MB', value: 'MB' },
+      { key: 'KB', text: 'KB', value: 'KB' },
+    ]
     
-    if (Array.isArray(obj)) {
-     
-      return (
-        <Grid className="ebs-filters-submenu">
-          {obj.map((sub, index) => {
-          
-            let prefix = "";
-            if (parent === "project__id") {
-              
-              console.log(currentTab)
-              if (currentTab !== "Sequence") {
-                if (currentTab === "Assembly"){
-                  prefix = "sequence__";
-                  
-                } else {
-                  prefix = "assembly__sequence__";
-                }
-              }
-            }
-            return (
-              <Grid.Row key={index}>
-                <Grid.Column>
-                  <Checkbox
-                    label={sub[prefix + parent]}
-                    name={String(sub[prefix + parent])}
-                    value={prefix + parent + "--" + sub[prefix + parent]}
-                    onChange={handleChange}
-                    checked = {checked}
-                  />
-
-                  
-                </Grid.Column>
-                <Grid.Column width={2} floated="right">
-                  <Label color="grey">{sub["total"]}</Label>
-                </Grid.Column>
-              </Grid.Row>
-            );
-          })}
-        </Grid>
-      );
-    } 
-  };
-
+  
   const getFilterSubMenuItems = (parent, obj) => {
+    console.log("my objtype=")
+    console.log(typeof(obj))
+    console.log(obj)
       return (
         <Grid className="ebs-filters-submenu">
-          {obj.map((sub, index) => {
-            // console.log("sub=" + sub)
-            // console.log("index=" + index)
+          { isIterable(obj) && obj.map((sub, index) => {
+            console.log("sub=" + sub)
+            console.log("index=" + index)
+            console.log("parent=" + parent)
             let prefix = "";
             if (parent === "project__id") {
               if (currentTab !== "Sequence") {
@@ -360,8 +330,7 @@ function SideMenu({
                 }
               }
             }
-            // console.log("parent=" + parent)
-            // console.log(sub[prefix+parent])
+            
             return (
               
               <Grid.Row className="ebs-filters-row" key={String(sub[prefix + parent])}>
@@ -378,13 +347,95 @@ function SideMenu({
                   <Label color="grey">{sub["total"]}</Label>
                 </Grid.Column>
               </Grid.Row>
-            );
-          })}
+           );
+
+          }
+          )}
+          {
+          parent === "contig_total_count" ? 
           
+             <>
+               <Grid.Row className="ebs-filters-row" key="min_count">
+               <Grid.Column>
+               <Input fluid
+                 type="number"
+                 min = {obj['count__min']}
+                 max = {obj['count__max']}
+                  name="min_count"
+                  
+                placeholder={'Max contig count'}
+                 />
+               </Grid.Column>
+              
+             </Grid.Row>
+             
+             <Grid.Row className="ebs-filters-row" key="max_count">
+               <Grid.Column>
+               <Input fluid
+                 type="number"
+                 min = {obj['count__min']}
+                  max = {obj['count__max']}
+                  name="max_count"
+                
+                placeholder={'Max contig count' }
+                 />
+               </Grid.Column>
+              
+             </Grid.Row>
+             <Grid.Row>
+               <Grid.Column textAlign="center">
+               <Button type='submit'>Apply</Button>
+               </Grid.Column>
+             </Grid.Row>
+             </>
+           :
+           parent === "contig_total_length" ?
+             <>
+               <Grid.Row className="ebs-filters-row" key="min_bp">
+               <Grid.Column>
+               <Input fluid
+                 type="number"
+                 min = {0}
+                  max = {5}
+                  name="min_bp"
+                  // label = "Max total length"
+                  label={<Dropdown defaultValue='MB' options={options} />}
+                  labelPosition='right'
+                placeholder='Min total length'
+                 />
+               </Grid.Column>
+              
+             </Grid.Row>
+             
+             <Grid.Row className="ebs-filters-row" key="max_bp">
+               <Grid.Column>
+                 <Input fluid
+                 type="number"
+                 min = {0}
+                  max = {5}
+                  name="max_bp"
+                  // label = "Max total length"
+                  label={<Dropdown defaultValue='MB' options={options} />}
+                  labelPosition='right'
+                placeholder='Max total length'
+                 />
+               </Grid.Column>
+              
+             </Grid.Row>
+             <Grid.Row>
+               <Grid.Column textAlign="center">
+               <Button type='submit'>Apply</Button>
+               </Grid.Column>
+             </Grid.Row>
+             </>
+              
+            : null
+  }
         </Grid>
-       
+          
       );
-    
+      
+      
   };
 
   const getFilterSubMenu = (val) =>{

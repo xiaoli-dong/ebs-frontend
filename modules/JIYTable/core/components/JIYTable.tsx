@@ -71,8 +71,7 @@ function JIYTable<T, R>({
     threshold: 0,
   };
 
-  console.log('legend in JIYTable tttttttttttttttttttttttttttttttttttttttt')
-  console.log(legend)
+  
   const stickyTableHeaderRef = useCallback(
     (node: HTMLElement | null) => {
       if (tableHeaderObserver.current) tableHeaderObserver.current.disconnect();
@@ -264,7 +263,7 @@ function JIYTable<T, R>({
               </Grid.Row>
 
              
-              {console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=" + path)}
+             {/*  {console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=" + path)} */}
                 {legend &&  getLegend()}
             
             </Sticky>

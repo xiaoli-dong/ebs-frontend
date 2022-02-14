@@ -147,8 +147,7 @@ const [legend, setLegend] = useState<JIYTableLegendContext>(null);
 
   useEffect(() => {
     setLegend({...legend, colors: colors, sizes: sizes, texts: texts})
-console.log('legendddddddddddddddddddddddddddddddddddddddddddddddddd')
-console.log(legend)
+
 
     if (isTabChange) {
       fetchData(URLHandler(URL.uri, "", MODULE, "", 1, 20, null).url);
