@@ -384,7 +384,7 @@ function SideMenu({
              </Grid.Row>
              <Grid.Row>
                <Grid.Column textAlign="center">
-               <Button type='submit'>Apply</Button>
+               <Button type='submit' >Apply</Button>
                </Grid.Column>
              </Grid.Row>
              </>
@@ -424,7 +424,7 @@ function SideMenu({
              </Grid.Row>
              <Grid.Row>
                <Grid.Column textAlign="center">
-               <Button type='submit'>Apply</Button>
+               <Button type='submit' >Apply</Button>
                </Grid.Column>
              </Grid.Row>
              </>
