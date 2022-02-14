@@ -17,6 +17,7 @@ import {
   JIYOrderingContext,
   JIYRecordContext,
   JIYSharedStateLayoutContext,
+  JIYTableLegendContext
 } from "../../../modules/JIYTable/core/models/JIYContexts";
 import IsolatesVizView from "./VizView";
 import {
@@ -63,7 +64,7 @@ function StatsView({
   const [excludedItems, setExcludedItems] = useState<
     Array<JIYRecordContext<FlatStats>>
   >([]);
-
+  const [legend, setLegend] = useState<JIYTableLegendContext>(null);
   const fetchData = useCallback(
     async (reqURL: string) => {
       const config = {
@@ -138,6 +139,7 @@ function StatsView({
                 ordering={ordering}
                 headers={headers}
                 records={records}
+                legend={legend}
                 isLoading={isLoading}
                 isRefreshing={isRefreshing}
                 invertSelection={invertSelection}
@@ -149,6 +151,7 @@ function StatsView({
                 setOrdering={setOrdering}
                 setHeaders={setHeaders}
                 setRecords={setRecords}
+                setLegend={setLegend}
                 setLoading={setLoading}
                 setRefreshing={setRefreshing}
                 setInvertSelection={setInvertSelection}

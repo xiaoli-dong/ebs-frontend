@@ -16,6 +16,7 @@ import {
   JIYOrderingContext,
   JIYRecordContext,
   JIYSharedStateLayoutContext,
+  JIYTableLegendContext
 } from "../../../modules/JIYTable/core/models/JIYContexts";
 import IsolatesVizView from "./VizView";
 import {
@@ -63,7 +64,7 @@ function SequenceView({
     Array<JIYRecordContext<FlatSequence>>
   >([]);
   const [wideView, setWideView] = useState(false);
-  
+  const [legend, setLegend] = useState<JIYTableLegendContext>(null);
   const fetchData = useCallback(
     async (reqURL: string) => {
       
@@ -146,6 +147,7 @@ function SequenceView({
                 ordering={ordering}
                 headers={headers}
                 records={records}
+                legend={legend}
                 isLoading={isLoading}
                 isRefreshing={isRefreshing}
                 invertSelection={invertSelection}
@@ -157,6 +159,7 @@ function SequenceView({
                 setOrdering={setOrdering}
                 setHeaders={setHeaders}
                 setRecords={setRecords}
+                setLegend={setLegend}
                 setLoading={setLoading}
                 setRefreshing={setRefreshing}
                 setInvertSelection={setInvertSelection}

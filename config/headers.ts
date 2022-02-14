@@ -830,13 +830,7 @@ export const CUSTOM_HEADER_PSUMMARY = {
     display: "none",
     primary: false,
   },
-  sequence: {
-    name: "sequence",
-    value: "sequence",
-    alias: "Sequence",
-    display: "none",
-    primary: false,
-  },
+  
   sequence__project__id: {
     name: "pid",
     value: "sequence__project__id",

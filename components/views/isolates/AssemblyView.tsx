@@ -17,6 +17,7 @@ import {
   JIYOrderingContext,
   JIYRecordContext,
   JIYSharedStateLayoutContext,
+  JIYTableLegendContext
 } from "../../../modules/JIYTable/core/models/JIYContexts";
 import IsolatesVizView from "./VizView";
 import {
@@ -65,7 +66,10 @@ function AssemblyView({
   const [excludedItems, setExcludedItems] = useState<
     Array<JIYRecordContext<FlatAssembly>>
   >([]);
-  
+
+
+  const [legend, setLegend] = useState<JIYTableLegendContext>(null);
+
   const fetchData = useCallback(
     async (reqURL: string) => {
       console.log("assemblyview.tsx reqURL=" + reqURL)
@@ -125,8 +129,9 @@ function AssemblyView({
     <Tab.Pane>
       <Grid padded>
         <Grid.Row>
-          <Grid.Column>
+        <Grid.Column>
             {headers && records ? (
+              
               <IsolatesVizView
                 title={MODULE}
                 path={PATH}
@@ -141,6 +146,7 @@ function AssemblyView({
                 ordering={ordering}
                 headers={headers}
                 records={records}
+                legend ={legend}
                 isLoading={isLoading}
                 isRefreshing={isRefreshing}
                 invertSelection={invertSelection}
@@ -152,6 +158,7 @@ function AssemblyView({
                 setOrdering={setOrdering}
                 setHeaders={setHeaders}
                 setRecords={setRecords}
+                setLegend={setLegend}
                 setLoading={setLoading}
                 setRefreshing={setRefreshing}
                 setInvertSelection={setInvertSelection}

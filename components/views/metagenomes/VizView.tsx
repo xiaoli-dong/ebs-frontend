@@ -30,6 +30,7 @@ function IsolatesVizView<T, R>({
   ordering,
   headers,
   records,
+  legend,
   isLoading,
   isRefreshing,
   invertSelection,
@@ -41,6 +42,7 @@ function IsolatesVizView<T, R>({
   setOrdering,
   setHeaders,
   setRecords,
+  setLegend,
   setLoading,
   setRefreshing,
   setInvertSelection,
@@ -63,6 +65,7 @@ function IsolatesVizView<T, R>({
         ordering={ordering}
         headers={headers}
         records={records}
+        legend={legend}
         isLoading={isLoading}
         isRefreshing={isRefreshing}
         invertSelection={invertSelection}
@@ -74,6 +77,7 @@ function IsolatesVizView<T, R>({
         setOrdering={setOrdering}
         setHeaders={setHeaders}
         setRecords={setRecords}
+        setLegend={setLegend}
         setLoading={setLoading}
         setRefreshing={setRefreshing}
         setInvertSelection={setInvertSelection}
