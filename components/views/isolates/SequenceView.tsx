@@ -104,7 +104,7 @@ function SequenceView({
   useEffect(() => {
     if (isRefreshing) {
       
-      fetchData(URLHandler(URL.uri, "", MODULE, "", 1, 20, null).url);
+      fetchData(URLHandler(URL.uri, null, MODULE, null, 1, 20, null).url);
       setRefreshing(false);
     }
   }, [isRefreshing]);
@@ -112,7 +112,7 @@ function SequenceView({
   useEffect(() => {
     if (isTabChange) {
       
-      fetchData(URLHandler(URL.uri, "", MODULE, "", 1, 20, null).url);
+      fetchData(URLHandler(URL.uri, null, MODULE, null, 1, 20, null).url);
       setTabChange(false);
     }
   }, [isTabChange]); 

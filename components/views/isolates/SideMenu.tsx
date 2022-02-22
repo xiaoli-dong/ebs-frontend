@@ -36,7 +36,11 @@ import {
 } from "../../../config/apis";
 import { useAuth } from "../../../middleware/AuthProvider";
 import SemanticDatepicker from "react-semantic-ui-datepickers";
-import { JIYInteractiveSideMenuContext } from "../../../modules/JIYTable/core/models/JIYContexts";
+import {
+  JIYInteractiveSideMenuContext,
+  JIYRange,
+  JIYBpRange
+} from "../../../modules/JIYTable/core/models/JIYContexts";
 import { DATE_FORMAT } from "../../../config/etc";
 
 const ApiDict = [
@@ -60,9 +64,11 @@ import {
 function SideMenu({
   currentTab,
   query,
+  search,
   wideView,
   isTabChange,
   setQuery,
+  setSearch,
   setWideView,
   setTabChange
 }: JIYInteractiveSideMenuContext): JSX.Element {
@@ -89,7 +95,11 @@ function SideMenu({
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isFilterOn, setFilterOn] = useState<boolean>(false)
   const [subMenuIndex, setSubMenuIndex] = useState({})
+ const [countRange, setCountRange] = useState<JIYRange>(null)
+ const[bpRange, setBpRange] = useState<JIYBpRange>(null)
  
+ 
+
   const fetchData_org = useCallback(
     async (reqURL: string) => {
       console.log("reqURL=" + reqURL)
@@ -118,7 +128,7 @@ function SideMenu({
   );
 
   const fetchData = useCallback(
-    async (abortController: AbortController) => {
+    async (reqURL: string, abortController: AbortController) => {
 
       try{
       const config = {
@@ -128,13 +138,12 @@ function SideMenu({
         signal: abortController.signal
       };
       setLoading(true);
-      
-
-      const endPoint = ApiDict.find((d) => d.tabName === currentTab).endPoint;
-      console.log("url=" + API + endPoint + "/?" + query)
+      console.log("fetchData url=" + reqURL)
+      // const endPoint = ApiDict.find((d) => d.tabName === currentTab).endPoint;
+      // console.log("url=" + API + endPoint + "/?" + query)
       await axios
-       // .get(reqURL, config)
-       .get(API + endPoint + "/?" + query, config)
+       .get(reqURL, config)
+       //.get(API + endPoint + "/?" + query, config)
         .then((res) => {
           if (res.status === 200) {
             console.log(res.data)
@@ -158,28 +167,41 @@ function SideMenu({
   );
   useEffect(() => {
     let isMounted = true;    
-    console.log("useEffect 0")
+    console.log("useEffect 0  currentTab=" + currentTab)
     const abortController = new AbortController();
+    const endPoint = ApiDict.find((d) => d.tabName === currentTab).endPoint;
+    console.log("url=" + endPoint + "/?" + query)
+    const URL = URLHandler(endPoint);
+    const MODULE = ""
+
     if (isMounted){
-    setQueryset([]);
-      setQuery("")
+      setQueryset([]);
+      setQuery(null)
+      setSearch(null)
       setSubMenuIndex({})
-      fetchData(abortController)
+      console.log("useEffect 0  , ismounted is true, currentTab=" + currentTab)
+      //fetchData(abortController)
+      fetchData(URLHandler(URL.uri, null, MODULE, null, 1, 20, null).url, abortController);
     }
     //clean-up function
     return () => {
       isMounted = false 
       abortController.abort(); 
-      
-      
     }
   }, [currentTab]);
 
   useEffect(() => {
-    let isMounted = true;    
-    console.log("useEffect 2")
+    setSearch(null)
+    console.log("queryset change====")
     console.log(queryset)
+    let isMounted = true;    
+    
     const abortController = new AbortController();
+    const endPoint = ApiDict.find((d) => d.tabName === currentTab).endPoint;
+    console.log("url=" + endPoint + "/?" + query)
+    const URL = URLHandler(endPoint);
+    const MODULE = ""
+
     if (isMounted){
       setQuery(
         queryset
@@ -198,7 +220,11 @@ function SideMenu({
           )
           .join("&")
       );
-      fetchData(abortController)
+    console.log("useEffect 2 currentTab=" + currentTab + " query=" + query + " queryset=")
+    console.log(queryset)
+    console.log("fecth my data=")
+      //fetchData(abortController)
+      fetchData(URLHandler(URL.uri, query, MODULE, search, 1, 20, null).url, abortController);
     }
       return () => {
         isMounted = false 
@@ -216,7 +242,114 @@ function SideMenu({
   ))}
     
   };
+ 
+  const countInputHandler = (e, data) =>{
+    console.log("handle count_max click and data=")
+    console.log(data)
+    console.log(data.name)
+
+    if (data.name ==='min_count'){ 
+      setCountRange({...countRange, name: 'count', from: data.value, min: data.min, max: data.max})
+    }
+    if( data.name === 'max_count'){
+        setCountRange({...countRange, name: 'count', to: data.value, min: data.min, max: data.max})
+    }
+    
+  }
   
+
+  const applyCountFilter = (e, data) =>{
+
+    if(countRange){
+    
+        console.log("count range=================================")
+        console.log(countRange)
+      if( ! countRange.from){
+        setCountRange({...countRange, name:'count', from: countRange.min})
+      }
+      if( ! countRange.to){
+        setCountRange({...countRange, name:'count', to: countRange.max})
+      }
+
+      const myarray =  [
+        {field: 'min_' + countRange.name, keywords: [countRange.from]},
+        {field: 'max_' + countRange.name, keywords: [countRange.to]}
+      ]
+      
+      let newset = []
+      newset = queryset.filter((obj)=>obj.field !== 'min_count').filter((obj)=>obj.field !== 'max_count')
+      setQueryset(
+        newset.length > 0
+            ? [...newset , myarray]
+            : myarray
+      );
+      console.log("queryset ==================================")
+      console.log(queryset)
+    }
+  }
+  const bpInputHandler = (e, data) =>{
+    console.log("handle bp input data=")
+    console.log(data)
+    console.log(data.name)
+
+    if (data.name ==='min_bp'){ 
+      ! bpRange
+      ? setBpRange({...bpRange, name: 'bp', from: data.value, from_unit: 'MB', min: data.min, max: data.max})
+      :  setBpRange({...bpRange, name: 'bp', from: data.value,  min: data.min, max: data.max})
+    }
+    if( data.name === 'max_bp'){
+      ! bpRange
+      ? setBpRange({...bpRange, name: 'bp', to: data.value, to_unit: 'MB', min: data.min, max: data.max})
+      :  setBpRange({...bpRange, name: 'bp', to: data.value,  min: data.min, max: data.max})
+    }
+    
+  }
+  const onUnitChange = (e, data) =>{
+    
+    console.log("onUnitSelection.................................................. data=")
+    console.log(data)
+    console.log(data.name)
+    if(data.name === 'min_bp'){
+    setBpRange({...bpRange, name: 'bp', from_unit: data.value})
+    }
+    else if(data.name === 'max_bp'){
+      setBpRange({...bpRange, name: 'bp', to_unit: data.value})
+    }
+    
+  }
+  const applyBpFilter = (e, data) =>{
+
+    if(bpRange){
+  
+      // console.log("bp range=================================")
+      // console.log(bpRange)
+      if( ! bpRange.from){
+        setBpRange({...bpRange, name:'bp', from: bpRange.min})
+      }
+      if( ! bpRange.to){
+        setBpRange({...bpRange, name:'bp', to: bpRange.max})
+      }
+     
+      let from = bpRange.from_unit === 'KB' ? bpRange.from * 1000 : bpRange.from * 1000000 
+      let to = bpRange.to_unit === 'KB' ? bpRange.to * 1000 : bpRange.to * 1000000 
+
+      const myarray =  [
+        {field: 'min_' + bpRange.name, keywords: [from]},
+        {field: 'max_' + bpRange.name, keywords: [to]}
+      ]
+      console.log("print myarray for bp")
+      console.log(myarray)
+      let newset = []
+      newset = queryset.filter((obj)=>obj.field !== 'min_bp').filter((obj)=>obj.field !== 'max_bp')
+      setQueryset(
+        newset.length > 0
+            ? [...newset , myarray]
+            : myarray
+      );
+      console.log("queryset ==================================")
+      console.log(queryset)
+    }
+  }
   const handleChange = useCallback(
     (e, data) => {
       const [mykey, myvalue] = data.value.split("--");
@@ -256,14 +389,27 @@ function SideMenu({
       console.log("key=" + key + " val=" + val)
       ))} */
       console.log("handleFilterListChange queryset=" + JSON.stringify(queryset))
-     
+      console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx ")
       //reset queryset when uncheck the squence filter list
     if(!checked){
+      
       console.log(label + " not checked")
+      if(label === 'contig_total_count'){
+        let copy_of_queryset = [...queryset]
+        let new_array =  copy_of_queryset .filter(item => item.field !== 'min_count' &&  item.field !== 'max_count')
+         setQueryset(new_array)
+      }
+      else if(label === 'contig_total_length'){
+        let copy_of_queryset = [...queryset]
+        let new_array =  copy_of_queryset .filter(item => item.field !== 'min_bp' &&  item.field !== 'max_bp')
+         setQueryset(new_array)
+      }
+      else {
       let copy_of_queryset = [...queryset]
        let new_array =  copy_of_queryset .filter(item => item.field !== label)
         setQueryset(new_array)
-      
+      }
+
       console.log("handleFilterListChange queryset1=" +JSON.stringify(queryset))
     }
   }
@@ -357,13 +503,14 @@ function SideMenu({
              <>
                <Grid.Row className="ebs-filters-row" key="min_count">
                <Grid.Column>
+                 
                <Input fluid
                  type="number"
                  min = {obj['count__min']}
                  max = {obj['count__max']}
                   name="min_count"
-                  
-                placeholder={'Max contig count'}
+                  onChange={countInputHandler}
+                placeholder={'Min contig count'}
                  />
                </Grid.Column>
               
@@ -376,15 +523,15 @@ function SideMenu({
                  min = {obj['count__min']}
                   max = {obj['count__max']}
                   name="max_count"
-                
                 placeholder={'Max contig count' }
+                onChange={countInputHandler}
                  />
                </Grid.Column>
               
              </Grid.Row>
              <Grid.Row>
                <Grid.Column textAlign="center">
-               <Button type='submit' >Apply</Button>
+               <Button type='submit'  onClick={applyCountFilter}>Apply</Button>
                </Grid.Column>
              </Grid.Row>
              </>
@@ -395,13 +542,14 @@ function SideMenu({
                <Grid.Column>
                <Input fluid
                  type="number"
-                 min = {0}
-                  max = {5}
+                 min = {Math.floor(obj['bp__min']/1000000)}
+                 max = {Math.ceil(obj['bp__max']/1000000)}
                   name="min_bp"
                   // label = "Max total length"
-                  label={<Dropdown defaultValue='MB' options={options} />}
+                  label={<Dropdown name="min_bp"  defaultValue='MB' options={options}  onChange={onUnitChange}/>}
                   labelPosition='right'
                 placeholder='Min total length'
+                onChange={bpInputHandler}
                  />
                </Grid.Column>
               
@@ -411,20 +559,21 @@ function SideMenu({
                <Grid.Column>
                  <Input fluid
                  type="number"
-                 min = {0}
-                  max = {5}
+                 min = {Math.floor(obj['bp__min']/1000000)}
+                 max = {Math.ceil(obj['bp__max']/1000000)}
                   name="max_bp"
                   // label = "Max total length"
-                  label={<Dropdown defaultValue='MB' options={options} />}
+                  label={<Dropdown name="max_bp" defaultValue='MB' options={options} onChange={onUnitChange}/>}
                   labelPosition='right'
                 placeholder='Max total length'
+                onChange={bpInputHandler}
                  />
                </Grid.Column>
               
              </Grid.Row>
              <Grid.Row>
                <Grid.Column textAlign="center">
-               <Button type='submit' >Apply</Button>
+               <Button type='submit' onClick={applyBpFilter} >Apply</Button>
                </Grid.Column>
              </Grid.Row>
              </>
@@ -493,9 +642,6 @@ function SideMenu({
 
   
       {filters && getFilterSubList()}
-    
-      
-   
     
       <Segment className="ebs-borderless ebs-shadowless">
         <Menu.Item

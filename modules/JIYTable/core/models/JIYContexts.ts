@@ -141,9 +141,11 @@ export interface VizViewContext {
 export interface JIYInteractiveSideMenuContext {
   currentTab: string;
   query: string;
+  search: string;
   wideView: boolean;
   isTabChange: boolean;
   setQuery: Dispatch<SetStateAction<string>>;
+  setSearch: Dispatch<SetStateAction<string>>;
   setWideView: Dispatch<SetStateAction<boolean>>;
   setTabChange: Dispatch<SetStateAction<boolean>>;
 }
@@ -176,3 +178,30 @@ export interface JIYTableLegendContext {
   setSizes: Dispatch<SetStateAction<string>>;
 }
 
+export interface JIYRange {
+  name: string;
+  from: number;
+  to: number;
+  min: number;
+  max: number;
+  setName: Dispatch<SetStateAction<string>>;
+  setFrom: Dispatch<SetStateAction<number>>;
+  setTo: Dispatch<SetStateAction<number>>;
+  setMin: Dispatch<SetStateAction<number>>;
+  set: Dispatch<SetStateAction<number>>;
+}
+
+export interface JIYBpRange {
+  name: string;
+  from: number;
+  to: number;
+  min: number;
+  max: number;
+  from_unit: string;
+  to_unit: string;
+  setName: Dispatch<SetStateAction<string>>;
+  setFrom: Dispatch<SetStateAction<number>>;
+  setTo: Dispatch<SetStateAction<number>>;
+  setMin: Dispatch<SetStateAction<number>>;
+  set: Dispatch<SetStateAction<number>>;
+}

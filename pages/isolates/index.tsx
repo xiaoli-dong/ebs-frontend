@@ -320,10 +320,12 @@ function Isolates() {
           <SideMenu
             currentTab={currentTab.panes[currentTab.activeIndex].menuItem}
             query={query}
+            search={search}
             wideView={wideView}
             isTabChange = {isTabChange}
             setWideView={setWideView}
             setQuery={setQuery}
+            setSearch={setSearch}
             setTabChange ={setTabChange}
           />
           

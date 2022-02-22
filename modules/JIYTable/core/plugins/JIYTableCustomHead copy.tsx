@@ -6,7 +6,7 @@
  * @desc [description]
  */
 
-import React, { useCallback, useReducer, useState } from "react";
+import React, { useCallback, useReducer } from "react";
 import { Grid, Input } from "semantic-ui-react";
 
 /**
@@ -19,7 +19,6 @@ function Search({ keyword, setKeyword }): JSX.Element {
     loading: false,
     searchValue: "",
   };
-  const [searchInput, setSearchInput] = useState<string>(null)
 
   function searchReducer(state, action) {
     switch (action.searchType) {
@@ -36,20 +35,22 @@ function Search({ keyword, setKeyword }): JSX.Element {
         throw new Error();
     }
   }
- 
+
   const [searchState, dispatchSearch] = useReducer(
     searchReducer,
     initialSearchState
   );
   const { searchValue } = searchState;
-  
-  const handleSearchInputChange = useCallback((e, data) => {
+  const handleClick = (e, data) =>{
+    console.log("search.................................")  
+    console.log(data)
+  }
+  const handleSearchChange = useCallback((e, data) => {
     dispatchSearch({ searchType: "START_SEARCH", searchQuery: data.value });
 
     if (data.value.length === 0) {
       dispatchSearch({ searchType: "CLEAN_QUERY" });
-      //setKeyword("");
-      setSearchInput("")
+      setKeyword("");
       return;
     }
 
@@ -58,22 +59,17 @@ function Search({ keyword, setKeyword }): JSX.Element {
       searchQuery: data.value,
     });
 
-    //setKeyword(data.value);
-    setSearchInput(data.value)
+    setKeyword(data.value);
   }, []);
-  
-  const submitSearch = (e, data) =>{
-    console.log("search.................................")  
-    console.log(data)
-    setKeyword(searchInput)
-  }
+
   return (
     <Input
-      onChange={handleSearchInputChange}
+      onChange={handleSearchChange}
       value={searchValue}
       placeholder="Search..."
       type="text"
-      action={{ icon: 'search', onClick: submitSearch}}
+      
+      action={{ icon: 'search', onClick: handleClick}}
     />
   );
 }
