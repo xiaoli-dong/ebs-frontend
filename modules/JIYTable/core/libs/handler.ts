@@ -93,7 +93,7 @@ export function URLHandler(
     }
   }
   
-  //console.log(API, uri, url, module)
+  console.log(API, uri, url, module)
   return {
     api: API,
     uri: uri,
@@ -153,7 +153,8 @@ export function SequencesDataHandler(
       data: flatSequences,
     })
     );
-
+    console.log("sequence data handler")
+    console.log(data)
   return {
     headers: schema,
     records: data,
@@ -413,8 +414,9 @@ keyset.forEach((key) =>
       const pf = obj.profile.find((o) => o.locus === key);
       //const value = obj.profile.find((o) => o.locus === key).allele;
       if(pf){
-        const value = pf.allele;
-        obj[key] = value.split("_")[0] + "(" + value.split("_")[1] + ")";
+        //const value = pf.allele;
+        obj[key] = pf.locus + "(" + pf.alleleId + ")"
+        //obj[key] = value.split("_")[0] + "(" + value.split("_")[1] + ")";
         //obj[key] = pf ? value.split("_")[0] + "(" + value.split("_")[1] + ")" : "-";
       }
       else{

@@ -61,7 +61,7 @@ export interface FlatStats {
 
 export interface Allele {
   locus: string;
-  allele: string;
+  alleleId: string;
 }
 
 export interface FlatMLSTWithProfile {

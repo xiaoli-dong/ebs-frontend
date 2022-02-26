@@ -82,7 +82,8 @@ function SequenceView({
               res.data.results,
               invertSelection
             );
-           
+           console.log("rows=")
+           console.log(rows)
             setNext(res.data.links.next);
             setPrev(res.data.links.previous);
             setTotal(Number(res.data.total));
@@ -124,6 +125,7 @@ function SequenceView({
         URLHandler(URL.uri, query, MODULE, search, page, pageSize, ordering).url
       );
     }
+    console.log(records)
   }, [isTabChange, isRefreshing, page, pageSize, search, ordering, query]);
 
 
