@@ -10,7 +10,6 @@ import React, { useEffect, useState } from "react";
 
 import { Grid, Icon, Menu, Segment, Tab } from "semantic-ui-react";
 import TopNav from "../../components/global/TopNav";
-import AssemblyView from "../../components/views/isolates/AssemblyView";
 import SequenceView from "../../components/views/metagenomes/SequenceView";
 import SideMenu from "../../components/views/metagenomes/SideMenu";
 
@@ -37,21 +36,6 @@ function Metagenomes() {
             setQuery={setQuery}
             setSearch={setSearch}
             setTabChange={setTabChange}
-          />
-        );
-      },
-    },
-    {
-      menuItem: "Assembly",
-      render: function getContent() {
-        return (
-          <AssemblyView
-          query={query}
-          search={search}
-          isTabChange={isTabChange}
-          setQuery={setQuery}
-          setSearch={setSearch}
-          setTabChange={setTabChange}
           />
         );
       },
@@ -85,21 +69,6 @@ function Metagenomes() {
           );
         },
       },
-      {
-        menuItem: "Taxonomy",
-        render: function getContent() {
-          return (
-            <AssemblyView
-            query={query}
-            search={search}
-            isTabChange={isTabChange}
-            setQuery={setQuery}
-            setSearch={setSearch}
-            setTabChange={setTabChange}
-            />
-          );
-        },
-      },
       
     ]);
   }, [query, search]);
@@ -118,10 +87,12 @@ function Metagenomes() {
           <SideMenu
           currentTab={currentTab.panes[currentTab.activeIndex].menuItem}
           query={query}
+          search={search}
           wideView={wideView}
           isTabChange = {isTabChange}
           setWideView={setWideView}
           setQuery={setQuery}
+          setSearch={setSearch}
           setTabChange ={setTabChange}
           />
         )}

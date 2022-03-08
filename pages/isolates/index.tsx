@@ -15,6 +15,7 @@ import StatsView from "../../components/views/isolates/StatsView";
 import MLSTView from "../../components/views/isolates/MLSTView";
 import ResistomeView from "../../components/views/isolates/ResistomeView";
 import VirulomeView from "../../components/views/isolates/VirulomeView";
+import PlasmidView from "../../components/views/isolates/PlasmidView";
 import TBSummaryView from "../../components/views/isolates/TBSummaryView";
 import SequenceView from "../../components/views/isolates/SequenceView";
 //import TestView from "../../components/views/isolates/SequenceView";
@@ -129,6 +130,21 @@ function Isolates() {
       render: function getContent() {
         return (
           <VirulomeView
+          query={query}
+          search={search}
+          isTabChange={isTabChange}
+          setQuery={setQuery}
+          setSearch={setSearch}
+          setTabChange={setTabChange}
+          />
+        );
+      },
+    },
+    {
+      menuItem: "Plasmid",
+      render: function getContent() {
+        return (
+          <PlasmidView
           query={query}
           search={search}
           isTabChange={isTabChange}
@@ -276,6 +292,21 @@ function Isolates() {
         render: function getContent() {
           return (
             <VirulomeView
+            query={query}
+            search={search}
+            isTabChange={isTabChange}
+            setQuery={setQuery}
+            setSearch={setSearch}
+            setTabChange={setTabChange}
+            />
+          );
+        },
+      },
+      {
+        menuItem: "Plasmid",
+        render: function getContent() {
+          return (
+            <PlasmidView
             query={query}
             search={search}
             isTabChange={isTabChange}

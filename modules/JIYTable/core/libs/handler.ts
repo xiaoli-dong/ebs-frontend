@@ -10,12 +10,13 @@ import { getValueFormatter } from "@nivo/core";
 import { API } from "../../../../config/apis";
 import { DATE_FORMAT, VIRULOME_LEGEND_POINT, RESISTOME_LEGEND_POINT } from "../../../../config/etc";
 import {
-  CUSTOM_HEADER_ANNOTATION,
+  
   CUSTOM_HEADER_ASSEMBLY,
   CUSTOM_HEADER_STATS,
   CUSTOM_HEADER_MLST,
   CUSTOM_HEADER_PSUMMARY,
   CUSTOM_HEADER_RESISTOME,
+  CUSTOM_HEADER_PLASMID,
   CUSTOM_HEADER_SEQUENCE,
   CUSTOM_HEADER_VIRULOME,
 } from "../../../../config/headers";
@@ -27,6 +28,7 @@ import {
   FlatPsummary,
   FlatResistomeWithProfile,
   FlatVirulomeWithProfile,
+  FlatPlasmidWithProfile,
 } from "../../../../models/Isolate";
 import { FlatSequence } from "../../../../models/Sequence";
 import {
@@ -272,93 +274,6 @@ export function AssemblyDataHandler(
       isSelected: invertSelection,
       data: flatStats,
     })
-  );
-
-  return {
-    headers: schema,
-    records: data,
-  };
-}
-
-/**
- * AnnotationDataHandler
- * @param results - Array of FlatAnnotation. See {@link FlatAnnotation}
- * @returns - See {@link JIYTabularDataContext}
- */
-export function AnnotationDataHandler(
-  results: Array<FlatAnnotationWithAttr>,
-  invertSelection: boolean
-): JIYTabularDataContext<FlatAnnotationWithAttr> {
-  const schema: Array<JIYHeaderContext> = Object.entries(
-    CUSTOM_HEADER_ANNOTATION
-  ).map(([, value]) => {
-    return {
-      name: value.name,
-      value: value.value,
-      alias: value.alias,
-      display: value.display as JIYHeaderDisplay,
-      primary: value.primary,
-    };
-  });
-
-  const keyset = Array.from(
-    new Set(
-      [].concat(
-        ...results.map((obj) => {
-          return obj.attr.map((o) => o.tag);
-        })
-      )
-    )
-  );
-
-  keyset.forEach((key) =>
-    schema.push({
-      name: key,
-      value: key,
-      alias: key,
-      display: "visible" as JIYHeaderDisplay,
-      primary: false,
-    })
-  );
-
-  const customized = results.map((obj) => {
-    keyset.forEach((key) => {
-      obj[key] = obj.attr.find((o) => o.tag === key)
-        ? obj.attr.find((o) => o.tag === key).value
-        : "-";
-    });
-
-    return {
-      ...obj,
-      DateCreated: new Date(obj.DateCreated).toLocaleDateString(
-        "en-US",
-        DATE_FORMAT
-      ),
-      LastUpdate: new Date(obj.LastUpdate).toLocaleDateString(
-        "en-US",
-        DATE_FORMAT
-      ),
-    } as FlatAnnotationWithAttr;
-  });
-
-  const standard = schema.map((obj) => obj.value);
-  const rearranged = customized.map((obj) =>
-    Object.fromEntries(
-      Object.entries(obj).sort(
-        (a, b) => standard.indexOf(a[0]) - standard.indexOf(b[0])
-      )
-    )
-  );
-
-  const data: Array<JIYRecordContext<FlatAnnotationWithAttr>> = rearranged.map(
-    (flatAnnotationWithAttr: FlatAnnotationWithAttr): JIYRecordContext<FlatAnnotationWithAttr> => {
-      return {
-        objType: "annotation",
-        dynamicColumns: true,
-        isSelected: invertSelection,
-        data: flatAnnotationWithAttr,
-      };
-    }
   );
 
   return {
@@ -676,6 +591,107 @@ export function VirulomeDataHandler(
     records: data,
   };
 }
+
+
+
+/**
+ *PlasmidDataHandler
+ * @param results - Array of FlatPlasmid. See {@link FlatPlasmid}
+ * @returns - See {@link JIYTabularDataContext}
+ */
+ export function PlasmidDataHandler(
+  results: Array<FlatPlasmidWithProfile>,
+  invertSelection: boolean
+): JIYTabularDataContext<FlatPlasmidWithProfile> {
+  const schema: Array<JIYHeaderContext> = Object.entries(
+    CUSTOM_HEADER_PLASMID
+  ).map(([, value]) => {
+    return {
+      name: value.name,
+      value: value.value,
+      alias: value.alias,
+      display: value.display as JIYHeaderDisplay,
+      primary: value.primary,
+    };
+  });
+  
+  const keyset = Array.from( 
+    new Set(
+      [].concat(
+        ...results.map((obj) => {
+          return obj.profile.map((o) => o.rep_types);
+        })
+      )
+    )
+  ).sort();
+  
+keyset.forEach((key) =>
+    schema.push({
+      name: key,
+      value: key,
+      alias: "",
+      display: "visible" as JIYHeaderDisplay,
+      primary: false,
+    })
+  );
+  
+
+  const customized = results.map((obj) => {
+    keyset.forEach((key) => {
+      const pf = obj.profile.find((o) => o.rep_types === key);
+      //const value = obj.profile.find((o) => o.locus === key).allele;
+      if(pf){
+        //const value = pf.allele;
+        obj[key] = pf.size
+        //obj[key] = value.split("_")[0] + "(" + value.split("_")[1] + ")";
+        //obj[key] = pf ? value.split("_")[0] + "(" + value.split("_")[1] + ")" : "-";
+      }
+      else{
+        obj[key] = "-"
+      }
+    });
+
+    return {
+      ...obj,
+      DateCreated: new Date(obj.DateCreated).toLocaleDateString(
+        "en-US",
+        DATE_FORMAT
+      ),
+      LastUpdate: new Date(obj.LastUpdate).toLocaleDateString(
+        "en-US",
+        DATE_FORMAT
+      ),
+    } as FlatPlasmidWithProfile;
+  });
+
+  const standard = schema.map((obj) => obj.value);
+  const rearranged = customized.map((obj) =>
+    Object.fromEntries(
+      Object.entries(obj).sort(
+        (a, b) => standard.indexOf(a[0]) - standard.indexOf(b[0])
+      )
+    )
+  );
+
+  const data: Array<JIYRecordContext<FlatPlasmidWithProfile>> = rearranged.map(
+    (
+      flatPlasmidWithProfile: FlatPlasmidWithProfile
+    ): JIYRecordContext<FlatPlasmidWithProfile> => ({
+      objType: "plasmid",
+      dynamicColumns: true,
+      isSelected: invertSelection,
+      data: flatPlasmidWithProfile,
+    })
+  );
+
+  return {
+    headers: schema,
+    records: data,
+  };
+}
+
+
+
 
 /**
  * ProfileSummaryDataHandler

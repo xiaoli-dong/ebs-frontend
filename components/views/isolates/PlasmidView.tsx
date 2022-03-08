@@ -9,9 +9,9 @@
 import axios from "axios";
 import React, { useCallback, useEffect, useState } from "react";
 import { Grid, Tab } from "semantic-ui-react";
-import { API_ASSEMBLY } from "../../../config/apis";
+import { API_PLASMID } from "../../../config/apis";
 import { useAuth } from "../../../middleware/AuthProvider";
-import { FlatAssembly } from "../../../models/Isolate";
+import { FlatPlasmidWithProfile } from "../../../models/Isolate";
 import {
   JIYHeaderContext,
   JIYOrderingContext,
@@ -22,25 +22,27 @@ import {
 import IsolatesVizView from "./VizView";
 import {
   URLHandler,
-  AssemblyDataHandler as handler,
+  PlasmidDataHandler as handler,
 } from "../../../modules/JIYTable/core/libs/handler";
 import TablePlaceholder from "../../global/TablePlaceholder";
 
 /**
- * AssemblyView
- * @returns - AssemblyView Component
+ * PlasmidView
+ * @returns - PlasmidView Component
  */
-function AssemblyView({
+function PlasmidView({
   query,
   search,
+  isTabChange,
   setQuery,
   setSearch,
+  setTabChange
 }: JIYSharedStateLayoutContext): JSX.Element {
   //const MODULE = "TB";
   //xiaoli
   const MODULE = ""
-  const PATH = "Isolates,Assembly";
-  const URL = URLHandler(API_ASSEMBLY);
+  const PATH = "Isolates,Plasmid";
+  const URL = URLHandler(API_PLASMID);
 
   const { accessToken } = useAuth();
 
@@ -54,13 +56,14 @@ function AssemblyView({
   const [ordering, setOrdering] = useState<JIYOrderingContext>(null);
   const [headers, setHeaders] = useState<Array<JIYHeaderContext>>(null);
   const [records, setRecords] =
-    useState<Array<JIYRecordContext<FlatAssembly>>>(null);
+    useState<Array<JIYRecordContext<FlatPlasmidWithProfile>>>(null);
 
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isRefreshing, setRefreshing] = useState<boolean>(false);
+
   const [invertSelection, setInvertSelection] = useState<boolean>(false);
   const [excludedItems, setExcludedItems] = useState<
-    Array<JIYRecordContext<FlatAssembly>>
+    Array<JIYRecordContext<FlatPlasmidWithProfile>>
   >([]);
   const [legend, setLegend] = useState<JIYTableLegendContext>(null);
   const fetchData = useCallback(
@@ -70,22 +73,28 @@ function AssemblyView({
           Authorization: "Bearer " + accessToken,
         },
       };
-
+      
+      
       setLoading(true);
       await axios
         .get(reqURL, config)
         .then((res) => {
           if (res.status === 200) {
+            console.log(URL)
+            console.log(reqURL)
+            console.log(res.data.results)
             const { headers: cols, records: rows } = handler(
               res.data.results,
               invertSelection
             );
+            console.log(cols)
             setNext(res.data.links.next);
             setPrev(res.data.links.previous);
             setTotal(Number(res.data.total));
             setPage(Number(res.data.page));
             setPageSize(Number(res.data.page_size));
-            headers || setHeaders(cols);
+            //headers || setHeaders(cols);
+            setHeaders(cols);
             setRecords(rows);
           }
         })
@@ -109,6 +118,14 @@ function AssemblyView({
       setRefreshing(false);
     }
   }, [isRefreshing]);
+
+  useEffect(() => {
+    if (isTabChange) {
+      fetchData(URLHandler(URL.uri, "", MODULE, "", 1, 20, null).url);
+      setTabChange(false);
+    }
+  }, [isTabChange]); 
+
 
   return (
     <Tab.Pane>
@@ -159,4 +176,4 @@ function AssemblyView({
   );
 }
 
-export default AssemblyView;
+export default PlasmidView;

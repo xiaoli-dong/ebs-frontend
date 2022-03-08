@@ -135,7 +135,23 @@ export interface FlatVirulomeWithProfile {
   Description: string;
   profile: Array<GeneCoverage>;
 }
-
+export interface FlatPlasmidWithProfile {
+  id: string;
+  owner: string;
+  assembly: string;
+  assembly__sequence__project__id: string; //need to check
+  assembly__sequence__project__title: string; //need to check
+  assembly__sequence__LibrarySource: string;
+  assembly__sequence__LibraryLayout: string;
+  assembly__sequence__SequencerModel: string;
+  assembly__sequence__CenterName: string;
+  seqtype: string;
+  num_found: number;
+  DateCreated: string;
+  LastUpdate: string;
+  Description: string;
+  profile: Array<Plasmidhit>;
+}
 export interface Attribute {
   tag: string;
   value: string;
@@ -237,6 +253,14 @@ export interface Variant {
 export interface Resistance {
   drug: string;
   mutations: string;
+}
+
+export interface Plasmidhit {
+  contig_id: string;
+  size: number;
+  rep_types: string;
+  mash_nearest_neighbor: string;
+  mash_neighbor_identification: string;
 }
 
 export interface Profile {

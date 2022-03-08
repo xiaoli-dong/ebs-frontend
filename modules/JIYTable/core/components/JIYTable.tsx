@@ -206,7 +206,7 @@ function JIYTable<T, R>({
 
             <Grid.Row>
               <JIYTableCustomHead
-                title={path.split(",")[0]}
+                title={path.split(",")[1]}
                 search={search}
                 isLoading={isLoading}
                 setSearch={setSearch}

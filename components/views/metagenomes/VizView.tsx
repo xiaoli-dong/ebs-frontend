@@ -16,7 +16,7 @@ import JIYTable from "../../../modules/JIYTable/core/components/JIYTable";
  * @param param0 - See {@link JIYTableStateContext}
  * @returns - Isolate Visualization View Component
  */
-function IsolatesVizView<T, R>({
+function MetagenomesVizView<T, R>({
   title,
   path,
   url,
@@ -38,7 +38,7 @@ function IsolatesVizView<T, R>({
   setPage,
   setPageSize,
   setQuery,
-  setSearch,
+ setSearch,
   setOrdering,
   setHeaders,
   setRecords,
@@ -88,4 +88,4 @@ function IsolatesVizView<T, R>({
   );
 }
 
-export default IsolatesVizView;
+export default MetagenomesVizView;

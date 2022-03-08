@@ -33,6 +33,7 @@ import {
   API_SEQUENCE_METADATA,
   API_TB_SUMMARY_METADATA,
   API_VIRULOME_METADATA,
+  API_PLASMID_METADATA,
 } from "../../../config/apis";
 import { useAuth } from "../../../middleware/AuthProvider";
 import SemanticDatepicker from "react-semantic-ui-datepickers";
@@ -51,6 +52,7 @@ const ApiDict = [
   { tabName: "MLST", endPoint: API_MLST_METADATA },
   { tabName: "Resistome", endPoint: API_RESISTOME_METADATA },
   { tabName: "Virulome", endPoint: API_VIRULOME_METADATA },
+  { tabName: "Plasmid", endPoint: API_PLASMID_METADATA },
   { tabName: "TBProfile", endPoint: API_TB_SUMMARY_METADATA },
 ];
 import {
@@ -467,12 +469,18 @@ function SideMenu({
             console.log("index=" + index)
             console.log("parent=" + parent)
             let prefix = "";
-            if (parent === "project__id") {
+            if (parent === "project__id" || parent === "sampleType") {
               if (currentTab !== "Sequence") {
-                if( (currentTab === "Assembly")  || (currentTab === "TBProfile")){
+                if( currentTab === "TBProfile"){
                   prefix = "sequence__";
+                 
+                } 
+                else if( currentTab === "Assembly"){
+                  //prefix = "sequence__";
+                  prefix = "biosample__";
                 } else {
-                  prefix = "assembly__sequence__";
+                  //prefix = "assembly__sequence__";
+                  prefix = "assembly__biosample__";
                 }
               }
             }
